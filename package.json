@@ -1,0 +1,19 @@
+{
+  "name": "azure-search-openai-demo",
+  "version": "1.0.0",
+  "description": "---\r name: ChatGPT + Enterprise data\r description: Chat with your data using OpenAI and AI Search.\r languages:\r - python\r - typescript\r - bicep\r - azdeveloper\r products:\r - azure-openai\r - azure-cognitive-search\r - azure-app-service\r - azure\r page_type: sample\r urlFragment: azure-search-openai-demo\r ---",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
