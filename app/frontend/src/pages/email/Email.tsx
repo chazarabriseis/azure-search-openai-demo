@@ -6,7 +6,7 @@ import styles from "./Email.module.css";
 import { askApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
 import { QuestionInput } from "../../components/QuestionInput";
-import { ExampleList } from "../../components/Example";
+import { EvaluationInput } from "../../components/EvaluationInput";
 import { AnalysisPanel, AnalysisPanelTabs } from "../../components/AnalysisPanel";
 import { SettingsButton } from "../../components/SettingsButton/SettingsButton";
 import { useLogin, getToken, isLoggedIn, requireAccessControl } from "../../authConfig";
@@ -169,7 +169,7 @@ export function Component(): JSX.Element {
     return (
         <div className={styles.emailContainer}>
             <div className={styles.emailTopSection}>
-                <SettingsButton className={styles.settingsButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
+                <SettingsButton className={styles.emailSettingsButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
                 <h1 className={styles.emailTitle}>Lass dir eine E-Mail Antwort für eine Frage erstellen</h1>
                 <div className={styles.emailQuestionInput}>
                     <QuestionInput placeholder="... ?" disabled={isLoading} initQuestion={question} onSend={question => makeApiRequest(question)} />
@@ -177,7 +177,6 @@ export function Component(): JSX.Element {
             </div>
             <div className={styles.emailBottomSection}>
                 {isLoading && <Spinner label="E-Mail Antwort wird generiert" />}
-                {!lastQuestionRef.current && <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} />}
                 {!isLoading && answer && !error && (
                     <div className={styles.emailAnswerContainer}>
                         <Answer
@@ -204,6 +203,11 @@ export function Component(): JSX.Element {
                         activeTab={activeAnalysisPanelTab}
                     />
                 )}
+            </div>
+            <div className={styles.emailBottomSection}>
+                <div className={styles.emailQuestionInput}>
+                    {!isLoading && answer && !error && <EvaluationInput disabled={isLoading} question={question} answer={answer} />}
+                </div>
             </div>
 
             <Panel

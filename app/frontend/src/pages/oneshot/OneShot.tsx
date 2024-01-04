@@ -6,7 +6,6 @@ import styles from "./OneShot.module.css";
 import { askApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
 import { QuestionInput } from "../../components/QuestionInput";
-import { EvaluationInput } from "../../components/EvaluationInput";
 import { ExampleList } from "../../components/Example";
 import { AnalysisPanel, AnalysisPanelTabs } from "../../components/AnalysisPanel";
 import { SettingsButton } from "../../components/SettingsButton/SettingsButton";
@@ -178,7 +177,6 @@ export function Component(): JSX.Element {
             </div>
             <div className={styles.oneshotBottomSection}>
                 {isLoading && <Spinner label="Antwort wird generiert" />}
-                {!lastQuestionRef.current && <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} />}
                 {!isLoading && answer && !error && (
                     <div className={styles.oneshotAnswerContainer}>
                         <Answer
@@ -205,16 +203,6 @@ export function Component(): JSX.Element {
                         activeTab={activeAnalysisPanelTab}
                     />
                 )}
-            </div>
-            <div className={styles.oneshotBottomSection}>
-                <div className={styles.oneshotQuestionInput}>
-                    <EvaluationInput
-                        placeholder="Hier kommen die Evaluierunazgsfragen"
-                        disabled={isLoading}
-                        initQuestion={question}
-                        onSend={question => makeApiRequest(question)}
-                    />
-                </div>
             </div>
 
             <Panel
