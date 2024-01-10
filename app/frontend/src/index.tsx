@@ -51,11 +51,15 @@ const router = createHashRouter([
             },
             {
                 path: "qa",
-                lazy: () => import("./pages/oneshot/OneShot")
+                lazy: () => import("./pages/qa/QA")
             },
             {
-                path: "email",
-                lazy: () => import("./pages/email/Email")
+                path: "marketing",
+                lazy: () => import("./pages/marketing/Marketing")
+            },
+            {
+                path: "chatgpt",
+                lazy: () => import("./pages/chatgpt/Chatgpt")
             },
             {
                 path: "*",

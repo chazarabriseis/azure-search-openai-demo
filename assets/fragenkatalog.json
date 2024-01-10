@@ -1,1 +1,21 @@
-{}
+{
+    "entries": [
+        {
+            "Frage": "test",
+            "Prompt": "test",
+            "AntwortChatGPT": "test",
+            "Kontext": "test",
+            "Korrektheit": "test",
+            "korrekte_Antwort": "test",
+            "Quelle": "test",
+            "Anmerkung": "test",
+            "TicketID": "test",
+            "Benefit": "test",
+            "Sonstiges": "test",
+            "Gerät": "test",
+            "Benutzer": "test",
+            "Zeitstempel": "test"
+        }
+    ]
+  }
+  

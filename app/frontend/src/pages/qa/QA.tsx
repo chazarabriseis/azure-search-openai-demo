@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdownOption, Dropdown } from "@fluentui/react";
+import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdownOption } from "@fluentui/react";
 
-import styles from "./OneShot.module.css";
+import styles from "./QA.module.css";
 
 import { askApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
 import { QuestionInput } from "../../components/QuestionInput";
-import { ExampleList } from "../../components/Example";
+import { EvaluationInput } from "../../components/EvaluationInput";
 import { AnalysisPanel, AnalysisPanelTabs } from "../../components/AnalysisPanel";
 import { SettingsButton } from "../../components/SettingsButton/SettingsButton";
 import { useLogin, getToken, isLoggedIn, requireAccessControl } from "../../authConfig";
@@ -204,6 +204,11 @@ export function Component(): JSX.Element {
                     />
                 )}
             </div>
+            <div className={styles.emailBottomSection}>
+                <div className={styles.emailQuestionInput}>
+                    {!isLoading && answer && !error && <EvaluationInput disabled={isLoading} question={question} answer={answer} />}
+                </div>
+            </div>
 
             <Panel
                 headerText="Configure answer generation"
@@ -286,4 +291,4 @@ export function Component(): JSX.Element {
     );
 }
 
-Component.displayName = "OneShot";
+Component.displayName = "QA";

@@ -5,16 +5,19 @@ import { Stack, TextField, IconButton } from "@fluentui/react";
 import { Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles } from "@fluentui/react/lib/Dropdown";
 
 import { AnimalTurtle16Filled, Send28Filled } from "@fluentui/react-icons";
-import { isLoggedIn, requireAccessControl } from "../../authConfig";
-import { ChatAppResponse } from "../../api";
+import { useLogin, getToken, isLoggedIn, requireAccessControl } from "../../authConfig";
+import { ChatAppResponse, appendToBlobApi } from "../../api";
 
 import styles from "./EvaluationInput.module.css";
+import { to } from "@react-spring/web";
 
 interface Props {
     disabled: boolean;
     question: string;
     answer: ChatAppResponse;
 }
+
+const client = useLogin ? useMsal().instance : undefined;
 
 const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 300 } };
 
@@ -104,10 +107,10 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
         }
     };
 
-    const onSaveClicked = () => {
-        const currentDatetime: Date = new Date();
-        setShowInfo(true);
+    const makeApiRequest = async () => {
+        const token = client ? await getToken(client) : undefined;
 
+        const currentDatetime: Date = new Date();
         const newline = {
             Frage: answer.choices[0].context.thoughts[0].description,
             Prompt: answer.choices[0].context.thoughts[2].description[0],
@@ -124,20 +127,28 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
             Benutzer: user,
             Zeitstempel: currentDatetime
         };
-        setUser("");
-        setAnmerkung("");
-        setSonstiges("");
-        setHandbuch("");
-        setSupportTicketID("");
-        setCorrectAnswer("");
-        setSelectedBenefit(undefined);
-        setSelectedCorrectness(undefined);
-        setSelectedGeraet(undefined);
-        console.log(newline);
-        console.log(answer);
-        const closeTimeoutId = setTimeout(() => {
-            setShowInfo(false);
-        }, 6000);
+        const dataToAppend = JSON.stringify(newline) + "\n";
+
+        try {
+            const result = await appendToBlobApi(dataToAppend, token);
+            console.log(result);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setShowInfo(true);
+            setUser("");
+            setAnmerkung("");
+            setSonstiges("");
+            setHandbuch("");
+            setSupportTicketID("");
+            setCorrectAnswer("");
+            setSelectedBenefit(undefined);
+            setSelectedCorrectness(undefined);
+            setSelectedGeraet(undefined);
+            const closeTimeoutId = setTimeout(() => {
+                setShowInfo(false);
+            }, 6000);
+        }
     };
 
     const [selectedCorrectness, setSelectedCorrectness] = useState<IDropdownOption>();
@@ -171,7 +182,6 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
                             selectedKey={selectedCorrectness ? selectedCorrectness.key : undefined}
                             onChange={(e, opt, index) => {
                                 setSelectedCorrectness(opt);
-                                console.log(opt?.text);
                             }}
                             placeholder="Wähle eine Option"
                             options={dropdownCorrectnessOptions}
@@ -215,7 +225,6 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
                             selectedKey={selectedGeraet ? selectedGeraet.key : undefined}
                             onChange={(e, opt, index) => {
                                 setSelectedGeraet(opt);
-                                console.log(opt?.text);
                             }}
                             placeholder="Wähle eine Option"
                             options={dropdownGeraetOptions}
@@ -237,7 +246,6 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
                             selectedKey={selectedBenefit ? selectedBenefit.key : undefined}
                             onChange={(e, opt, index) => {
                                 setSelectedBenefit(opt);
-                                console.log(opt?.text);
                             }}
                             placeholder="Wähle eine Option"
                             options={dropdownBenefitsOptions}
@@ -268,7 +276,7 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
                             iconProps={{ iconName: "Save" }}
                             title="Speichern"
                             ariaLabel="Speichern"
-                            onClick={() => onSaveClicked()}
+                            onClick={() => makeApiRequest()}
                         />
                     </Stack>
                 </Stack>

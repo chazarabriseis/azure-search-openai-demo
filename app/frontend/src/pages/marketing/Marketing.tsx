@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdownOption, Dropdown } from "@fluentui/react";
 
-import styles from "./Email.module.css";
+import styles from "./Marketing.module.css";
 
 import { askApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
@@ -291,4 +291,4 @@ export function Component(): JSX.Element {
     );
 }
 
-Component.displayName = "Email";
+Component.displayName = "Marketing";
