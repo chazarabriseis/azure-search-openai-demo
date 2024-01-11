@@ -1,7 +1,3 @@
-import { BlobServiceClient, StorageSharedKeyCredential, AnonymousCredential } from "@azure/storage-blob";
-import { InteractiveBrowserCredential, DefaultAzureCredential } from "@azure/identity";
-import axios from "axios";
-
 const BACKEND_URI = "";
 
 import { ChatAppResponse, ChatAppResponseOrError, ChatAppRequest, Config } from "./models";
@@ -19,24 +15,6 @@ function getHeaders(idToken: string | undefined): Record<string, string> {
     }
 
     return headers;
-}
-
-// Use the obtained access token to get a Shared Access Signature (SAS)
-const getBlobSasToken = async (accessToken: string | undefined) => {
-    const blobName = "fragenkatalog.json";
-
-    // Make a request to your backend to generate a SAS token using the obtained access token
-    // Your backend should be responsible for creating a SAS token for the specific blob
-    // Example: /api/GetBlobSasToken?blobName=your-append-blob-name&accessToken=your-access-token
-    const response = await axios.get(`/api/GetBlobSasToken?blobName=${blobName}&accessToken=${accessToken}`);
-
-    return response.data.sasToken;
-};
-
-export async function appendToBlobApi(dataToAppend: string, accessToken: string | undefined): Promise<string> {
-    console.log("writing to Blob");
-    console.log(dataToAppend);
-    return `${BACKEND_URI}/appendtoBlob/${dataToAppend}`;
 }
 
 export async function askApi(request: ChatAppRequest, idToken: string | undefined): Promise<ChatAppResponse> {
@@ -86,16 +64,34 @@ export async function chatApi(request: ChatAppRequest, idToken: string | undefin
     });
 }
 
-export function getCitationFilePath(citation: string): string {
-    console.log("getting citation");
-    console.log(citation);
-    return `${BACKEND_URI}/content/${citation}`;
-}
-
 export async function chatoriginalApi(request: ChatAppRequest, idToken: string | undefined): Promise<Response> {
     return await fetch(`${BACKEND_URI}/chatoriginal`, {
         method: "POST",
         headers: getHeaders(idToken),
         body: JSON.stringify(request)
     });
+}
+
+export function getCitationFilePath(citation: string): string {
+    console.log("getting citation");
+    console.log(citation);
+    return `${BACKEND_URI}/content/${citation}`;
+}
+
+export async function appendToBlobApi(dataToAppend: string, idToken: string | undefined): Promise<string> {
+    console.log("writing to Blob");
+
+    const response = await fetch(`${BACKEND_URI}/appendtoBlob`, {
+        method: "POST",
+        headers: getHeaders(idToken),
+        body: JSON.stringify({ dataToAppend })
+    });
+
+    console.log(response);
+    if (response.status == 200) {
+        return "Success";
+    } else {
+        console.error("Error appending to Blob:", response.statusText);
+        return "Problem";
+    }
 }

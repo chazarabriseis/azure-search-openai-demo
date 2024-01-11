@@ -14,6 +14,7 @@ from azure.monitor.opentelemetry import configure_azure_monitor
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.indexes.aio import SearchIndexClient
 from azure.storage.blob.aio import BlobServiceClient
+# from azure.storage.blob import AppendBlobService
 from openai import APIError, AsyncAzureOpenAI, AsyncOpenAI
 from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 from opentelemetry.instrumentation.asgi import OpenTelemetryMiddleware
@@ -28,6 +29,7 @@ from quart import (
     request,
     send_file,
     send_from_directory,
+    Response
 )
 from quart_cors import cors
 
@@ -87,6 +89,35 @@ async def assets(path):
     return await send_from_directory(Path(__file__).resolve().parent / "static" / "assets", path)
 
 
+@bp.route("/appendtoBlob", methods=['POST'])
+async def appendtoBlob():
+    if not request.is_json:
+        return jsonify({"error": "request must be json"}), 415
+    logging.info("Appending %s to blob", request)
+    request_json = await request.get_json()
+    data_to_append = request_json.get("data", {})
+    logging.info("Appending %s to blob", data_to_append)
+    storage_url = "https://stv2cjdtder3zq6.blob.core.windows.net"
+    container_name = "appdata"
+    blob_name = "fragenkatalog.json"
+    #append_blob_service = AppendBlobService()
+    
+    blob_container_client = current_app.config[CONFIG_BLOB_CONTAINER_CLIENT]
+    #container_client = blob_container_client.get_container_client(container_name)
+    #blob_container_client = blob_client.get_container_client(container_name)
+    #azure_credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
+    #blob_client = BlobServiceClient(
+    #    account_url=f"https://stv2cjdtder3zq6.blob.core.windows.net", credential=azure_credential
+    #)
+   
+    try: 
+        blob_client = blob_container_client.get_container_client(blob_name)
+        #blob_client = container_client.get_append_blob_client(blob_name)
+        await blob_client.append_block(data_to_append.encode('utf-8'), length=len(data_to_append))
+        #await append_blob_service.append_blob_from_text(container_name, blob_name, data_to_append.encode('utf-8'))
+    except Exception as error:
+        logging.exception("Could not append to Blob")
+
 # Serve content files from blob storage from within the app to keep the example self-contained.
 # *** NOTE *** this assumes that the content files are public, or at least that all users of the app
 # can access all the files. This is also slow and memory hungry.
@@ -112,22 +143,6 @@ async def content_file(path: str):
     await blob.readinto(blob_file)
     blob_file.seek(0)
     return await send_file(blob_file, mimetype=mime_type, as_attachment=False, attachment_filename=path)
-
-
-@bp.route("/appendtoBlob/<data_to_append>")
-async def appendtoBlob(data_to_append: str):
-    logging.info("Appending %s to blob", data_to_append)
-    containerName = "appdata"
-    blobName = "fragenkatalog.json"
-    blob_container_client = current_app.config[CONFIG_BLOB_CONTAINER_CLIENT]
-    try:
-        #containerClient = blob_container_client.getContainerClient(containerName)
-        blob_client = blob_container_client.getAppendBlobClient(blobName)
-        await blob_client.appendBlock(data_to_append, data_to_append.length)
-    except error_response:
-        logging.exception("Could not append to Blob")
-        return "Problem"
-    return "Success"
 
 
 def error_dict(error: Exception) -> dict:
