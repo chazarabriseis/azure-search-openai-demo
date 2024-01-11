@@ -84,7 +84,7 @@ export async function appendToBlobApi(dataToAppend: string, idToken: string | un
     const response = await fetch(`${BACKEND_URI}/appendtoBlob`, {
         method: "POST",
         headers: getHeaders(idToken),
-        body: JSON.stringify({ dataToAppend })
+        body: JSON.stringify({ data: dataToAppend })
     });
 
     console.log(response);

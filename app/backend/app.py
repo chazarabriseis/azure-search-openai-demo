@@ -14,7 +14,6 @@ from azure.monitor.opentelemetry import configure_azure_monitor
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.indexes.aio import SearchIndexClient
 from azure.storage.blob.aio import BlobServiceClient
-# from azure.storage.blob import AppendBlobService
 from openai import APIError, AsyncAzureOpenAI, AsyncOpenAI
 from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 from opentelemetry.instrumentation.asgi import OpenTelemetryMiddleware
@@ -93,30 +92,19 @@ async def assets(path):
 async def appendtoBlob():
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
-    logging.info("Appending %s to blob", request)
     request_json = await request.get_json()
     data_to_append = request_json.get("data", {})
-    logging.info("Appending %s to blob", data_to_append)
-    storage_url = "https://stv2cjdtder3zq6.blob.core.windows.net"
-    container_name = "appdata"
     blob_name = "fragenkatalog.json"
-    #append_blob_service = AppendBlobService()
     
     blob_container_client = current_app.config[CONFIG_BLOB_CONTAINER_CLIENT]
-    #container_client = blob_container_client.get_container_client(container_name)
-    #blob_container_client = blob_client.get_container_client(container_name)
-    #azure_credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
-    #blob_client = BlobServiceClient(
-    #    account_url=f"https://stv2cjdtder3zq6.blob.core.windows.net", credential=azure_credential
-    #)
-   
+
     try: 
-        blob_client = blob_container_client.get_container_client(blob_name)
-        #blob_client = container_client.get_append_blob_client(blob_name)
+        blob_client = blob_container_client.get_blob_client(blob_name)
         await blob_client.append_block(data_to_append.encode('utf-8'), length=len(data_to_append))
-        #await append_blob_service.append_blob_from_text(container_name, blob_name, data_to_append.encode('utf-8'))
+        return "Success"
     except Exception as error:
         logging.exception("Could not append to Blob")
+        return "Problem"
 
 # Serve content files from blob storage from within the app to keep the example self-contained.
 # *** NOTE *** this assumes that the content files are public, or at least that all users of the app
