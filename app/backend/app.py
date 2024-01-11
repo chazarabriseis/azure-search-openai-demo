@@ -36,14 +36,18 @@ from approaches.chatreadretrieveread import ChatReadRetrieveReadApproach
 from approaches.chatreadretrievereadvision import ChatReadRetrieveReadVisionApproach
 from approaches.retrievethenread import RetrieveThenReadApproach
 from approaches.retrievethenreadvision import RetrieveThenReadVisionApproach
+from approaches.retrievethenreadmarketing import RetrieveThenReadMarketingApproach
+from approaches.chatreadretrievereadoriginal import ChatReadRetrieveReadOriginalApproach
 from core.authentication import AuthenticationHelper
 
 CONFIG_OPENAI_TOKEN = "openai_token"
 CONFIG_CREDENTIAL = "azure_credential"
 CONFIG_ASK_APPROACH = "ask_approach"
+CONFIG_MARKETING_APPROACH = "marketing_approach"
 CONFIG_ASK_VISION_APPROACH = "ask_vision_approach"
 CONFIG_CHAT_VISION_APPROACH = "chat_vision_approach"
 CONFIG_CHAT_APPROACH = "chat_approach"
+CONFIG_CHAT_ORIGINAL_APPROACH = "chat_original_approach"
 CONFIG_BLOB_CONTAINER_CLIENT = "blob_container_client"
 CONFIG_AUTH_CLIENT = "auth_client"
 CONFIG_GPT4V_DEPLOYED = "gpt4v_deployed"
@@ -110,6 +114,22 @@ async def content_file(path: str):
     return await send_file(blob_file, mimetype=mime_type, as_attachment=False, attachment_filename=path)
 
 
+@bp.route("/appendtoBlob/<data_to_append>")
+async def appendtoBlob(data_to_append: str):
+    logging.info("Appending %s to blob", data_to_append)
+    containerName = "appdata"
+    blobName = "fragenkatalog.json"
+    blob_container_client = current_app.config[CONFIG_BLOB_CONTAINER_CLIENT]
+    try:
+        #containerClient = blob_container_client.getContainerClient(containerName)
+        blob_client = blob_container_client.getAppendBlobClient(blobName)
+        await blob_client.appendBlock(data_to_append, data_to_append.length)
+    except error_response:
+        logging.exception("Could not append to Blob")
+        return "Problem"
+    return "Success"
+
+
 def error_dict(error: Exception) -> dict:
     if isinstance(error, APIError) and error.code == "content_filter":
         return {"error": ERROR_MESSAGE_FILTER}
@@ -144,6 +164,29 @@ async def ask():
         return jsonify(r)
     except Exception as error:
         return error_response(error, "/ask")
+
+
+@bp.route("/marketingqa", methods=["POST"])
+async def marketingqa():
+    if not request.is_json:
+        return jsonify({"error": "request must be json"}), 415
+    request_json = await request.get_json()
+    context = request_json.get("context", {})
+    auth_helper = current_app.config[CONFIG_AUTH_CLIENT]
+    try:
+        context["auth_claims"] = await auth_helper.get_auth_claims_if_enabled(request.headers)
+        use_gpt4v = context.get("overrides", {}).get("use_gpt4v", False)
+        approach: Approach
+        if use_gpt4v and CONFIG_ASK_VISION_APPROACH in current_app.config:
+            approach = cast(Approach, current_app.config[CONFIG_ASK_VISION_APPROACH])
+        else:
+            approach = cast(Approach, current_app.config[CONFIG_MARKETING_APPROACH])
+        r = await approach.run(
+            request_json["messages"], context=context, session_state=request_json.get("session_state")
+        )
+        return jsonify(r)
+    except Exception as error:
+        return error_response(error, "/marketing")
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -193,6 +236,39 @@ async def chat():
             return response
     except Exception as error:
         return error_response(error, "/chat")
+    
+
+@bp.route("/chatoriginal", methods=["POST"])
+async def chatoriginal():
+    if not request.is_json:
+        return jsonify({"error": "request must be json"}), 415
+    request_json = await request.get_json()
+    context = request_json.get("context", {})
+    auth_helper = current_app.config[CONFIG_AUTH_CLIENT]
+    try:
+        context["auth_claims"] = await auth_helper.get_auth_claims_if_enabled(request.headers)
+        use_gpt4v = context.get("overrides", {}).get("use_gpt4v", False)
+        approach: Approach
+        if use_gpt4v and CONFIG_CHAT_VISION_APPROACH in current_app.config:
+            approach = cast(Approach, current_app.config[CONFIG_CHAT_VISION_APPROACH])
+        else:
+            approach = cast(Approach, current_app.config[CONFIG_CHAT_ORIGINAL_APPROACH])
+
+        result = await approach.run(
+            request_json["messages"],
+            stream=request_json.get("stream", False),
+            context=context,
+            session_state=request_json.get("session_state"),
+        )
+        if isinstance(result, dict):
+            return jsonify(result)
+        else:
+            response = await make_response(format_as_ndjson(result))
+            response.timeout = None  # type: ignore
+            response.mimetype = "application/json-lines"
+            return response
+    except Exception as error:
+        return error_response(error, "/chatoriginal")
 
 
 # Send MSAL.js settings to the client UI
@@ -328,6 +404,20 @@ async def setup_clients():
         query_speller=AZURE_SEARCH_QUERY_SPELLER,
     )
 
+    current_app.config[CONFIG_MARKETING_APPROACH] = RetrieveThenReadMarketingApproach(
+        search_client=search_client,
+        openai_client=openai_client,
+        auth_helper=auth_helper,
+        chatgpt_model=OPENAI_CHATGPT_MODEL,
+        chatgpt_deployment=AZURE_OPENAI_CHATGPT_DEPLOYMENT,
+        embedding_model=OPENAI_EMB_MODEL,
+        embedding_deployment=AZURE_OPENAI_EMB_DEPLOYMENT,
+        sourcepage_field=KB_FIELDS_SOURCEPAGE,
+        content_field=KB_FIELDS_CONTENT,
+        query_language=AZURE_SEARCH_QUERY_LANGUAGE,
+        query_speller=AZURE_SEARCH_QUERY_SPELLER,
+    )
+
     if USE_GPT4V:
         if vision_key is None:
             raise ValueError("Vision key must be set (in Key Vault) to use the vision approach.")
@@ -367,6 +457,20 @@ async def setup_clients():
         )
 
     current_app.config[CONFIG_CHAT_APPROACH] = ChatReadRetrieveReadApproach(
+        search_client=search_client,
+        openai_client=openai_client,
+        auth_helper=auth_helper,
+        chatgpt_model=OPENAI_CHATGPT_MODEL,
+        chatgpt_deployment=AZURE_OPENAI_CHATGPT_DEPLOYMENT,
+        embedding_model=OPENAI_EMB_MODEL,
+        embedding_deployment=AZURE_OPENAI_EMB_DEPLOYMENT,
+        sourcepage_field=KB_FIELDS_SOURCEPAGE,
+        content_field=KB_FIELDS_CONTENT,
+        query_language=AZURE_SEARCH_QUERY_LANGUAGE,
+        query_speller=AZURE_SEARCH_QUERY_SPELLER,
+    )
+
+    current_app.config[CONFIG_CHAT_ORIGINAL_APPROACH] = ChatReadRetrieveReadOriginalApproach(
         search_client=search_client,
         openai_client=openai_client,
         auth_helper=auth_helper,

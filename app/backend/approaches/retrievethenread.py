@@ -19,11 +19,12 @@ class RetrieveThenReadApproach(Approach):
     Simple retrieve-then-read implementation, using the AI Search and OpenAI APIs directly. It first retrieves
     top documents from search, then constructs a prompt with them, and then uses OpenAI to generate an completion
     (answer) with that prompt.
+    This is for the Q&A Tab
     """
 
    
     system_chat_template = (
-        "Beantworte die Frage als E-Mail detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
+        "Beantworte die Frage detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
         + "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. "
         + "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel"
     )
@@ -38,7 +39,7 @@ class RetrieveThenReadApproach(Approach):
         info3.pdf: Es können Berechtigungen vergeben werden.
         info4.pdf: Es können die Anzahl der Türen angepasst werder.
         """
-    answer = "Sehr geehrter Kunde, Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf]. Bei weiteren Fragen melden Sie sich gerne wieder! Mit freundlichen Grüßem, Ihr PCS Support Team"
+    answer = "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf]."
     def __init__(
         self,
         *,

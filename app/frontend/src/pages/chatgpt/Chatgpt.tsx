@@ -6,7 +6,7 @@ import readNDJSONStream from "ndjson-readablestream";
 import styles from "./Chatgpt.module.css";
 
 import {
-    chatApi,
+    chatoriginalApi,
     configApi,
     RetrievalMode,
     ChatAppResponse,
@@ -152,7 +152,7 @@ export function Component(): JSX.Element {
                 session_state: answers.length ? answers[answers.length - 1][1].choices[0].session_state : null
             };
 
-            const response = await chatApi(request, token);
+            const response = await chatoriginalApi(request, token);
             if (!response.body) {
                 throw Error("No response body");
             }

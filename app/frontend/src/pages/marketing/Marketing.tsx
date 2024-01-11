@@ -3,7 +3,7 @@ import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdo
 
 import styles from "./Marketing.module.css";
 
-import { askApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
+import { marketingApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
 import { QuestionInput } from "../../components/QuestionInput";
 import { EvaluationInput } from "../../components/EvaluationInput";
@@ -95,7 +95,7 @@ export function Component(): JSX.Element {
                 // ChatAppProtocol: Client must pass on any session state received from the server
                 session_state: answer ? answer.choices[0].session_state : null
             };
-            const result = await askApi(request, token);
+            const result = await marketingApi(request, token);
             setAnswer(result);
         } catch (e) {
             setError(e);

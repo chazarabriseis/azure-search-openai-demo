@@ -1,5 +1,5 @@
 import { BlobServiceClient, StorageSharedKeyCredential, AnonymousCredential } from "@azure/storage-blob";
-import { InteractiveBrowserCredential } from "@azure/identity";
+import { InteractiveBrowserCredential, DefaultAzureCredential } from "@azure/identity";
 import axios from "axios";
 
 const BACKEND_URI = "";
@@ -33,31 +33,29 @@ const getBlobSasToken = async (accessToken: string | undefined) => {
     return response.data.sasToken;
 };
 
-export async function appendToBlobApi(dataToAppend: string, accessToken: string | undefined): Promise<void> {
+export async function appendToBlobApi(dataToAppend: string, accessToken: string | undefined): Promise<string> {
     console.log("writing to Blob");
     console.log(dataToAppend);
-    const accountUrl = "https://stv2cjdtder3zq6.blob.core.windows.net";
-    const containerName = "appdata";
-    const blobName = "fragenkatalog.json";
-
-    const sasToken = await getBlobSasToken(accessToken);
-    const blobServiceClient = new BlobServiceClient(`${accountUrl}?${sasToken}`, new AnonymousCredential());
-
-    //const sharedKeyCredential = new StorageSharedKeyCredential(accountUrl, "your-storage-account-key");
-    //const blobServiceClient = new BlobServiceClient(accountUrl, sharedKeyCredential);
-
-    //const credential = new InteractiveBrowserCredential({ tenantId: "dd089e65-09bc-4657-8ad6-0c1cb6181625", clientId: "b3896f94-09f1-45fe-99fe-bfc314d23706" });
-    //const blobServiceClient = new BlobServiceClient("https://stv2cjdtder3zq6.blob.core.windows.net", credential);
-
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    const blobClient = containerClient.getAppendBlobClient(blobName);
-
-    // Append data to the blob
-    await blobClient.appendBlock(dataToAppend, dataToAppend.length);
+    return `${BACKEND_URI}/appendtoBlob/${dataToAppend}`;
 }
 
 export async function askApi(request: ChatAppRequest, idToken: string | undefined): Promise<ChatAppResponse> {
     const response = await fetch(`${BACKEND_URI}/ask`, {
+        method: "POST",
+        headers: getHeaders(idToken),
+        body: JSON.stringify(request)
+    });
+
+    const parsedResponse: ChatAppResponseOrError = await response.json();
+    if (response.status > 299 || !response.ok) {
+        throw Error(parsedResponse.error || "Unknown error");
+    }
+
+    return parsedResponse as ChatAppResponse;
+}
+
+export async function marketingApi(request: ChatAppRequest, idToken: string | undefined): Promise<ChatAppResponse> {
+    const response = await fetch(`${BACKEND_URI}/marketingqa`, {
         method: "POST",
         headers: getHeaders(idToken),
         body: JSON.stringify(request)
@@ -89,5 +87,15 @@ export async function chatApi(request: ChatAppRequest, idToken: string | undefin
 }
 
 export function getCitationFilePath(citation: string): string {
+    console.log("getting citation");
+    console.log(citation);
     return `${BACKEND_URI}/content/${citation}`;
+}
+
+export async function chatoriginalApi(request: ChatAppRequest, idToken: string | undefined): Promise<Response> {
+    return await fetch(`${BACKEND_URI}/chatoriginal`, {
+        method: "POST",
+        headers: getHeaders(idToken),
+        body: JSON.stringify(request)
+    });
 }

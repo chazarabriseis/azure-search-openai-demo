@@ -14,13 +14,13 @@ from core.authentication import AuthenticationHelper
 from core.modelhelper import get_token_limit
 
 
-class ChatReadRetrieveReadApproach(ChatApproach):
+class ChatReadRetrieveReadOriginalApproach(ChatApproach):
 
     """
     A multi-step approach that first uses OpenAI to turn the user's question into a search query,
     then uses Azure AI Search to retrieve relevant documents, and then sends the conversation history,
     original user question, and search results to OpenAI to generate a response.
-    This is used for the chat tab.
+    This is used fo rth etab ChatGPT Original
     """
 
     def __init__(
@@ -53,10 +53,7 @@ class ChatReadRetrieveReadApproach(ChatApproach):
 
     @property
     def system_message_chat_conversation(self):
-        return """Der Assistent hilft den Mitarbeitern der PCS bei Support Fragen von Kunden.
-        Beantworten Sie die Fragen NUR mit den Fakten, die in der Liste der Quellen unten aufgeführt sind. Wenn die Informationen unten nicht ausreichen, sagen Sie, dass Sie es nicht wissen. Geben Sie keine Antworten, die sich nicht auf die unten aufgeführten Quellen stützen. Wenn eine klärende Frage an den Benutzer hilfreich wäre, stellen Sie die Frage.
-        Für tabellarische Informationen geben Sie diese als html-Tabelle zurück. Geben Sie kein Markdown-Format zurück. Antworten Sie auf deutsch.
-        Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information; geben Sie immer den Namen der Quelle für jede Tatsache an, die Sie in Ihrer Antwort verwenden. Verwenden Sie eckige Klammern, um auf die Quelle zu verweisen, zum Beispiel [info1.txt]. Kombinieren Sie keine Quellen, sondern geben Sie jede Quelle einzeln an, z. B. [info1.txt][info2.pdf].
+        return """Der Assistent chattet wie eine chatGPT Anwendung und ignoriert dabei die unten angegebene Quellen.
         {follow_up_questions_prompt}
         {injected_prompt}
         """
