@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdownOption, Dropdown } from "@fluentui/react";
+import { SparkleFilled } from "@fluentui/react-icons";
 
-import styles from "./Marketing.module.css";
+import styles from "./QA.module.css";
 
 import { marketingApi, configApi, ChatAppResponse, ChatAppRequest, RetrievalMode, VectorFieldOptions, GPT4VInput } from "../../api";
 import { Answer, AnswerError } from "../../components/Answer";
 import { QuestionInput } from "../../components/QuestionInput";
-import { EvaluationInput } from "../../components/EvaluationInput";
+import { EvaluationInputMarketing } from "../../components/EvaluationInputMarketing";
 import { AnalysisPanel, AnalysisPanelTabs } from "../../components/AnalysisPanel";
 import { SettingsButton } from "../../components/SettingsButton/SettingsButton";
 import { useLogin, getToken, isLoggedIn, requireAccessControl } from "../../authConfig";
 import { VectorSettings } from "../../components/VectorSettings";
 import { GPT4VSettings } from "../../components/GPT4VSettings";
+import { ExampleList } from "../../components/Example";
 
 import { useMsal } from "@azure/msal-react";
 import { TokenClaimsDisplay } from "../../components/TokenClaimsDisplay";
@@ -22,7 +24,7 @@ export function Component(): JSX.Element {
     const [promptTemplatePrefix, setPromptTemplatePrefix] = useState<string>("");
     const [promptTemplateSuffix, setPromptTemplateSuffix] = useState<string>("");
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
-    const [retrieveCount, setRetrieveCount] = useState<number>(3);
+    const [retrieveCount, setRetrieveCount] = useState<number>(5);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
     const [useSemanticCaptions, setUseSemanticCaptions] = useState<boolean>(false);
     const [useGPT4V, setUseGPT4V] = useState<boolean>(false);
@@ -167,18 +169,21 @@ export function Component(): JSX.Element {
     };
 
     return (
-        <div className={styles.emailContainer}>
-            <div className={styles.emailTopSection}>
-                <SettingsButton className={styles.emailSettingsButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
-                <h1 className={styles.emailTitle}>Lass dir eine E-Mail Antwort für eine Frage erstellen</h1>
-                <div className={styles.emailQuestionInput}>
+        <div className={styles.oneshotContainer}>
+            <div className={styles.oneshotTopSection}>
+                <SettingsButton className={styles.settingsButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
+                <h2>Athena KI-Testphase: Feedback zur Qualität im Formular unter der Antwort & im Teamskanal erwünscht!</h2>
+                <SparkleFilled fontSize={"120px"} primaryFill={"#9CBF2B"} aria-hidden="true" aria-label="Chatgpt logo" />
+                <h1 className={styles.oneshotTitle}>Lass dir Texte mit der PCS Wissensdatenbank erstellen. Hier zwei Beispiele:</h1>
+                <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} tabName={"marketing"} />
+                <div className={styles.oneshotQuestionInput}>
                     <QuestionInput placeholder="... ?" disabled={isLoading} initQuestion={question} onSend={question => makeApiRequest(question)} />
                 </div>
             </div>
-            <div className={styles.emailBottomSection}>
-                {isLoading && <Spinner label="E-Mail Antwort wird generiert" />}
+            <div className={styles.oneshotBottomSection}>
+                {isLoading && <Spinner label="Athena arbeitet ..." />}
                 {!isLoading && answer && !error && (
-                    <div className={styles.emailAnswerContainer}>
+                    <div className={styles.oneshotAnswerContainer}>
                         <Answer
                             answer={answer}
                             isStreaming={false}
@@ -189,13 +194,13 @@ export function Component(): JSX.Element {
                     </div>
                 )}
                 {error ? (
-                    <div className={styles.emailAnswerContainer}>
+                    <div className={styles.oneshotAnswerContainer}>
                         <AnswerError error={error.toString()} onRetry={() => makeApiRequest(lastQuestionRef.current)} />
                     </div>
                 ) : null}
                 {activeAnalysisPanelTab && answer && (
                     <AnalysisPanel
-                        className={styles.emailAnalysisPanel}
+                        className={styles.oneshotAnalysisPanel}
                         activeCitation={activeCitation}
                         onActiveTabChanged={x => onToggleTab(x)}
                         citationHeight="600px"
@@ -204,14 +209,14 @@ export function Component(): JSX.Element {
                     />
                 )}
             </div>
-            <div className={styles.emailBottomSection}>
-                <div className={styles.emailQuestionInput}>
-                    {!isLoading && answer && !error && <EvaluationInput disabled={isLoading} question={question} answer={answer} />}
+            <div className={styles.oneshotBottomSection}>
+                <div className={styles.oneshotQuestionInput}>
+                    {!isLoading && answer && !error && <EvaluationInputMarketing disabled={isLoading} question={question} answer={answer} />}
                 </div>
             </div>
 
             <Panel
-                headerText="Configure answer generation"
+                headerText="Konfigurieren Sie die Erstellung von Antworten"
                 isOpen={isConfigPanelOpen}
                 isBlocking={false}
                 onDismiss={() => setIsConfigPanelOpen(false)}
@@ -220,56 +225,17 @@ export function Component(): JSX.Element {
                 isFooterAtBottom={true}
             >
                 <TextField
-                    className={styles.emailSettingsSeparator}
+                    className={styles.oneshotSettingsSeparator}
                     defaultValue={promptTemplate}
-                    label="Override prompt template"
+                    label="Prompt Vorlage überschreiben"
                     multiline
                     autoAdjustHeight
                     onChange={onPromptTemplateChange}
                 />
-                <SpinButton
-                    className={styles.emailSettingsSeparator}
-                    label="Retrieve this many search results:"
-                    min={1}
-                    max={50}
-                    defaultValue={retrieveCount.toString()}
-                    onChange={onRetrieveCountChange}
-                />
-                <TextField className={styles.emailSettingsSeparator} label="Exclude category" onChange={onExcludeCategoryChanged} />
-                <Checkbox
-                    className={styles.emailSettingsSeparator}
-                    checked={useSemanticRanker}
-                    label="Use semantic ranker for retrieval"
-                    onChange={onUseSemanticRankerChange}
-                />
-                <Checkbox
-                    className={styles.emailSettingsSeparator}
-                    checked={useSemanticCaptions}
-                    label="Use query-contextual summaries instead of whole documents"
-                    onChange={onUseSemanticCaptionsChange}
-                    disabled={!useSemanticRanker}
-                />
-
-                {showGPT4VOptions && (
-                    <GPT4VSettings
-                        gpt4vInputs={gpt4vInput}
-                        isUseGPT4V={useGPT4V}
-                        updateUseGPT4V={useGPT4V => {
-                            setUseGPT4V(useGPT4V);
-                        }}
-                        updateGPT4VInputs={inputs => setGPT4VInput(inputs)}
-                    />
-                )}
-
-                <VectorSettings
-                    showImageOptions={useGPT4V && showGPT4VOptions}
-                    updateVectorFields={(options: VectorFieldOptions[]) => setVectorFieldList(options)}
-                    updateRetrievalMode={(retrievalMode: RetrievalMode) => setRetrievalMode(retrievalMode)}
-                />
 
                 {useLogin && (
                     <Checkbox
-                        className={styles.emailSettingsSeparator}
+                        className={styles.oneshotSettingsSeparator}
                         checked={useOidSecurityFilter || requireAccessControl}
                         label="Use oid security filter"
                         disabled={!isLoggedIn(client) || requireAccessControl}
@@ -278,7 +244,7 @@ export function Component(): JSX.Element {
                 )}
                 {useLogin && (
                     <Checkbox
-                        className={styles.emailSettingsSeparator}
+                        className={styles.oneshotSettingsSeparator}
                         checked={useGroupsSecurityFilter || requireAccessControl}
                         label="Use groups security filter"
                         disabled={!isLoggedIn(client) || requireAccessControl}

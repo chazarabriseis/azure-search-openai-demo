@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { Stack, TextField, IconButton } from "@fluentui/react";
-// import { Button, Tooltip, Field, Textarea } from "@fluentui/react-components";
 import { Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles } from "@fluentui/react/lib/Dropdown";
 
 import { AnimalTurtle16Filled, Send28Filled } from "@fluentui/react-icons";
@@ -21,17 +20,39 @@ const client = useLogin ? useMsal().instance : undefined;
 
 const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 300 } };
 
+const selectedThemen = [];
+
 const dropdownCorrectnessOptions = [
     { key: "ja", text: "Ja" },
     { key: "teils", text: "Teils" },
     { key: "nein", text: "Nein" }
 ];
 
-const dropdownGeraetOptions = [
+const dropdownThemenOptions = [
+    { key: "5200", text: "5200" },
+    { key: "5205", text: "5205" },
+    { key: "5320", text: "5320" },
+    { key: "5500", text: "5500" },
+    { key: "5540", text: "5540" },
+    { key: "5600", text: "5600" },
+    { key: "ACM40e", text: "ACM40e" },
+    { key: "ACM80eRack", text: "ACM80eRack" },
+    { key: "ACM80eWand", text: "ACM80eWand" },
     { key: "intus com", text: "INTUS COM" },
-    { key: "tpi", text: "TPI" },
-    { key: "tcl", text: "TCL" },
-    { key: "terminal", text: "Terminal" }
+    { key: "RFID-Zutrittsleser", text: "RFID-Zutrittsleser" },
+    { key: "RFID-Technologie", text: "RFID-Technologie" },
+    { key: "Flex Air", text: "Flex Air" },
+    { key: "Flex OnCard ", text: "Flex OnCard" },
+    { key: "PegaSys", text: "PegaSys" },
+    { key: "DEXICON", text: "DEXICON" },
+    { key: "DEXIOS", text: "DEXIOS" },
+    { key: "INTUS COM/TPI", text: "INTUS COM/TPI" },
+    { key: "TCL", text: "TCL" },
+    { key: "Palm Secure", text: "Palm Secure" },
+    { key: "Fingerprint", text: "Fingerprint" },
+    { key: "Kaufmännisches", text: "Kaufmännisches" },
+    { key: "Rechtliches", text: "Rechtliches" },
+    { key: "Sonstiges", text: "Sonstiges" }
 ];
 
 const dropdownBenefitsOptions = [
@@ -109,13 +130,21 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
 
     const makeApiRequest = async () => {
         const token = client ? await getToken(client) : undefined;
-
+        const contextList = answer.choices[0].context.thoughts[1].description;
+        const context: string[] = [];
+        if (contextList.length > 0) {
+            for (const dict of contextList) {
+                if ("sourcepage" in dict) {
+                    context.push(dict["sourcepage"]);
+                }
+            }
+        }
         const currentDatetime: Date = new Date();
         const newline = {
             Frage: answer.choices[0].context.thoughts[0].description,
-            Prompt: answer.choices[0].context.thoughts[2].description[0],
+            // Prompt: answer.choices[0].context.thoughts[2].description[0],
             AntwortChatGPT: answer.choices[0].message.content,
-            Kontext: answer.choices[0].context.thoughts[1].description,
+            Kontext: context,
             Korrektheit: selectedCorrectness?.text,
             korrekte_Antwort: correct_answer,
             Quelle: handbuch,
@@ -123,7 +152,7 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
             TicketID: supportTicketID,
             Benefit: selectedBenefit?.text,
             Sonstiges: sonstiges,
-            Gerät: selectedGeraet?.text,
+            Thema: selectedThemen,
             Benutzer: user,
             Zeitstempel: currentDatetime
         };
@@ -131,7 +160,6 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
 
         try {
             const result = await appendToBlobApi(dataToAppend, token);
-            console.log(result);
         } catch (e) {
             console.log(e);
         } finally {
@@ -144,7 +172,7 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
             setCorrectAnswer("");
             setSelectedBenefit(undefined);
             setSelectedCorrectness(undefined);
-            setSelectedGeraet(undefined);
+            setSelectedThemen([]);
             const closeTimeoutId = setTimeout(() => {
                 setShowInfo(false);
             }, 6000);
@@ -155,7 +183,34 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
 
     const [selectedBenefit, setSelectedBenefit] = useState<IDropdownOption>();
 
-    const [selectedGeraet, setSelectedGeraet] = useState<IDropdownOption>();
+    const [selectedThemen, setSelectedThemen] = useState<IDropdownOption[]>([]);
+
+    const onChangeSelectedThemen = (
+        event: React.FormEvent<HTMLDivElement> | undefined,
+        item: IDropdownOption<any> | undefined,
+        index: number | undefined
+    ): void => {
+        if (!item) {
+            // Handle the case when item is undefined
+            console.log("Keine Auswahl!");
+            return;
+        }
+        const updatedSelection = [...selectedThemen];
+        console.log(selectedThemen);
+
+        if (item.selected) {
+            // Add the selected item to the array
+            updatedSelection.push(item);
+        } else {
+            // Remove the unselected item from the array
+            const indexToRemove = updatedSelection.findIndex(option => option.key === item.key);
+            if (indexToRemove !== -1) {
+                updatedSelection.splice(indexToRemove, 1);
+            }
+        }
+
+        setSelectedThemen(updatedSelection);
+    };
 
     return (
         <div>
@@ -221,14 +276,13 @@ export const EvaluationInput = ({ disabled, question, answer }: Props) => {
                     )}
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
-                            label="Auf welches Geraet bezieht sich die Frage?"
-                            selectedKey={selectedGeraet ? selectedGeraet.key : undefined}
-                            onChange={(e, opt, index) => {
-                                setSelectedGeraet(opt);
-                            }}
+                            label="Auf welches Thema bezieht sich die Frage?"
+                            selectedKeys={selectedThemen?.map(option => option.key.toString())}
+                            onChange={onChangeSelectedThemen}
                             placeholder="Wähle eine Option"
-                            options={dropdownGeraetOptions}
+                            options={dropdownThemenOptions}
                             styles={dropdownStyles}
+                            multiSelect
                         />
                     </Stack>
                     <Stack horizontal className={styles.evaluationInputTextContainer}>

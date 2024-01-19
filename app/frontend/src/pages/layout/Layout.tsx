@@ -14,7 +14,7 @@ const Layout = () => {
             <header className={styles.header} role={"banner"} style={{ backgroundColor: "#9CBF2B" }}>
                 <div className={styles.headerContainer}>
                     <Link to="/" className={styles.headerTitleContainer}>
-                        <h3 className={styles.headerTitle}>PCS - KI</h3>
+                        <h3 className={styles.headerTitle}>PCS - ATHENA KI</h3>
                     </Link>
                     <nav>
                         <ul className={styles.headerNavList}>
@@ -30,12 +30,17 @@ const Layout = () => {
                             </li>
                             <li className={styles.headerNavLeftMargin}>
                                 <NavLink to="/marketing" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
-                                    Marketingtext
+                                    PM/MarCom
                                 </NavLink>
                             </li>
                             <li className={styles.headerNavLeftMargin}>
                                 <NavLink to="/chatgpt" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
                                     ChatGPT original
+                                </NavLink>
+                            </li>
+                            <li className={styles.headerNavLeftMargin}>
+                                <NavLink to="/info" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
+                                    Info
                                 </NavLink>
                             </li>
                         </ul>

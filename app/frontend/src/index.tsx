@@ -62,6 +62,10 @@ const router = createHashRouter([
                 lazy: () => import("./pages/chatgpt/Chatgpt")
             },
             {
+                path: "info",
+                lazy: () => import("./pages/info/Info")
+            },
+            {
                 path: "*",
                 lazy: () => import("./pages/NoPage")
             }

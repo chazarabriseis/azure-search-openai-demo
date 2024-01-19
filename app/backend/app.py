@@ -94,13 +94,27 @@ async def appendtoBlob():
         return jsonify({"error": "request must be json"}), 415
     request_json = await request.get_json()
     data_to_append = request_json.get("data", {})
-    blob_name = "fragenkatalog.json"
+    blob_name = "fragenkatalog_block.json"
     
     blob_container_client = current_app.config[CONFIG_BLOB_CONTAINER_CLIENT]
 
     try: 
         blob_client = blob_container_client.get_blob_client(blob_name)
-        await blob_client.append_block(data_to_append.encode('utf-8'), length=len(data_to_append))
+
+        # Retrieve existing content
+        existing_content = await blob_client.download_blob()
+        existing_data = await existing_content.readall()
+
+        existing_data = existing_data.decode('utf-8')
+        
+        # Append new data to existing data
+        updated_data = existing_data + data_to_append + ','
+
+        # Upload the updated content back to the blob
+        await blob_client.upload_blob(updated_data.encode('utf-8'), overwrite=True)
+
+
+        #await blob_client.append_block(data_to_append.encode('utf-8'), length=len(data_to_append))
         return "Success"
     except Exception as error:
         logging.exception("Could not append to Blob")

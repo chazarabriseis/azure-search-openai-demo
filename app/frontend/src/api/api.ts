@@ -73,13 +73,12 @@ export async function chatoriginalApi(request: ChatAppRequest, idToken: string |
 }
 
 export function getCitationFilePath(citation: string): string {
-    console.log("getting citation");
-    console.log(citation);
     return `${BACKEND_URI}/content/${citation}`;
 }
 
 export async function appendToBlobApi(dataToAppend: string, idToken: string | undefined): Promise<string> {
     console.log("writing to Blob");
+    console.log(dataToAppend);
 
     const response = await fetch(`${BACKEND_URI}/appendtoBlob`, {
         method: "POST",

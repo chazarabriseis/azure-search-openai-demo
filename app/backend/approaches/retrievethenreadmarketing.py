@@ -23,9 +23,7 @@ class RetrieveThenReadMarketingApproach(Approach):
     """
 
     system_chat_template = (
-        "Bitte erstelle mir einen technisch fundierten Marketingtext zu gegeben Thema mit einer seriösen, kompetenten und gleichzeitig nahbaren Ansprache auf deutsch."
-        + "Das PDF MBPW_Businessplan_Handbuch.pdf und MBPW_Businessplan_Handbuch.pdf erklären wie ein guter Marketing text aussehen soll."
-        + "Verwende für den Inhalt NUR die Fakten, die in der Liste der Quellen unten aufgeführt sind."
+        "Verwende für die Fragestellung NUR die Fakten, die in der Liste der Quellen unten aufgeführt sind."
         + "Gebe keine Antworten, die sich nicht auf die unten aufgeführten Quellen stützen. "
         + "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deinem Text verwendet wird. "
         + "Wenn der Text nicht anhand der unten aufgeführten Quellen erstellt werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel"
@@ -33,15 +31,13 @@ class RetrieveThenReadMarketingApproach(Approach):
 
     # shots/sample conversation
     question = """
-'Thema: Vorteile eines Hardwarechecks '
+'Erstelle einen Marketing Text zu den Vorteilen eines Hardwarechecks '
 
 Quellen:
-info1.txt: INTUS Hardwar ist zuverlässig. 
-info2.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden.
-info3.pdf: Es können Berechtigungen vergeben werden.
-info4.pdf: Da sich Technologien weiterentwickeln sollte die Firmware auf Sicherheitslücken geprüft werden.
+info1.txt: INTUS Hardware ist zuverlässig. 
+info2.pdf: Da sich Technologien weiterentwickeln sollte die Firmware auf Sicherheitslücken geprüft werden.
 """
-    answer = "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [info1.txt]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info4.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.  "
+    answer = "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [info1.txt]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info2.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.  "
 
     def __init__(
         self,

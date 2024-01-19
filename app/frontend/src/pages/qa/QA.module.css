@@ -23,9 +23,10 @@
 }
 
 .oneshotTitle {
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: 600;
-    margin-top: 130px;
+    margin-top: 0px;
+    text-align: center;
 }
 
 @media only screen and (max-width: 800px) {

@@ -31,13 +31,6 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, citationHeigh
             onLinkClick={pivotItem => pivotItem && onActiveTabChanged(pivotItem.props.itemKey! as AnalysisPanelTabs)}
         >
             <PivotItem
-                itemKey={AnalysisPanelTabs.ThoughtProcessTab}
-                headerText="Gedankengang der KI"
-                headerButtonProps={isDisabledThoughtProcessTab ? pivotItemDisabledStyle : undefined}
-            >
-                <ThoughtProcess thoughts={answer.choices[0].context.thoughts || []} />
-            </PivotItem>
-            <PivotItem
                 itemKey={AnalysisPanelTabs.SupportingContentTab}
                 headerText="Unterstützende Textabschnitte"
                 headerButtonProps={isDisabledSupportingContentTab ? pivotItemDisabledStyle : undefined}

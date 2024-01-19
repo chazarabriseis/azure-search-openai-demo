@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Checkbox, Panel, DefaultButton, Spinner, TextField, SpinButton, IDropdownOption } from "@fluentui/react";
+import { SparkleFilled } from "@fluentui/react-icons";
 
 import styles from "./QA.module.css";
 
@@ -12,6 +13,7 @@ import { SettingsButton } from "../../components/SettingsButton/SettingsButton";
 import { useLogin, getToken, isLoggedIn, requireAccessControl } from "../../authConfig";
 import { VectorSettings } from "../../components/VectorSettings";
 import { GPT4VSettings } from "../../components/GPT4VSettings";
+import { ExampleList } from "../../components/Example";
 
 import { useMsal } from "@azure/msal-react";
 import { TokenClaimsDisplay } from "../../components/TokenClaimsDisplay";
@@ -22,7 +24,7 @@ export function Component(): JSX.Element {
     const [promptTemplatePrefix, setPromptTemplatePrefix] = useState<string>("");
     const [promptTemplateSuffix, setPromptTemplateSuffix] = useState<string>("");
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
-    const [retrieveCount, setRetrieveCount] = useState<number>(3);
+    const [retrieveCount, setRetrieveCount] = useState<number>(5);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
     const [useSemanticCaptions, setUseSemanticCaptions] = useState<boolean>(false);
     const [useGPT4V, setUseGPT4V] = useState<boolean>(false);
@@ -170,13 +172,16 @@ export function Component(): JSX.Element {
         <div className={styles.oneshotContainer}>
             <div className={styles.oneshotTopSection}>
                 <SettingsButton className={styles.settingsButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
-                <h1 className={styles.oneshotTitle}>Stelle eine Frage</h1>
+                <h2>Athena KI-Testphase: Feedback zur Qualität im Teamskanal erwünscht!</h2>
+                <SparkleFilled fontSize={"120px"} primaryFill={"#9CBF2B"} aria-hidden="true" aria-label="Chatgpt logo" />
+                <h1 className={styles.oneshotTitle}>Stelle eine Frage an die PCS-Wissensdatenbank und bewerte anschließend die Antwort.</h1>
+                <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} tabName={"qa"} />
                 <div className={styles.oneshotQuestionInput}>
                     <QuestionInput placeholder="... ?" disabled={isLoading} initQuestion={question} onSend={question => makeApiRequest(question)} />
                 </div>
             </div>
             <div className={styles.oneshotBottomSection}>
-                {isLoading && <Spinner label="Antwort wird generiert" />}
+                {isLoading && <Spinner label="Athena arbeitet ..." />}
                 {!isLoading && answer && !error && (
                     <div className={styles.oneshotAnswerContainer}>
                         <Answer
@@ -211,7 +216,7 @@ export function Component(): JSX.Element {
             </div>
 
             <Panel
-                headerText="Configure answer generation"
+                headerText="Konfigurieren Sie die Erstellung von Antworten"
                 isOpen={isConfigPanelOpen}
                 isBlocking={false}
                 onDismiss={() => setIsConfigPanelOpen(false)}
@@ -222,51 +227,11 @@ export function Component(): JSX.Element {
                 <TextField
                     className={styles.oneshotSettingsSeparator}
                     defaultValue={promptTemplate}
-                    label="Override prompt template"
+                    label="Prompt Vorlage überschreiben"
                     multiline
                     autoAdjustHeight
                     onChange={onPromptTemplateChange}
                 />
-                <SpinButton
-                    className={styles.oneshotSettingsSeparator}
-                    label="Retrieve this many search results:"
-                    min={1}
-                    max={50}
-                    defaultValue={retrieveCount.toString()}
-                    onChange={onRetrieveCountChange}
-                />
-                <TextField className={styles.oneshotSettingsSeparator} label="Exclude category" onChange={onExcludeCategoryChanged} />
-                <Checkbox
-                    className={styles.oneshotSettingsSeparator}
-                    checked={useSemanticRanker}
-                    label="Use semantic ranker for retrieval"
-                    onChange={onUseSemanticRankerChange}
-                />
-                <Checkbox
-                    className={styles.oneshotSettingsSeparator}
-                    checked={useSemanticCaptions}
-                    label="Use query-contextual summaries instead of whole documents"
-                    onChange={onUseSemanticCaptionsChange}
-                    disabled={!useSemanticRanker}
-                />
-
-                {showGPT4VOptions && (
-                    <GPT4VSettings
-                        gpt4vInputs={gpt4vInput}
-                        isUseGPT4V={useGPT4V}
-                        updateUseGPT4V={useGPT4V => {
-                            setUseGPT4V(useGPT4V);
-                        }}
-                        updateGPT4VInputs={inputs => setGPT4VInput(inputs)}
-                    />
-                )}
-
-                <VectorSettings
-                    showImageOptions={useGPT4V && showGPT4VOptions}
-                    updateVectorFields={(options: VectorFieldOptions[]) => setVectorFieldList(options)}
-                    updateRetrievalMode={(retrievalMode: RetrievalMode) => setRetrievalMode(retrievalMode)}
-                />
-
                 {useLogin && (
                     <Checkbox
                         className={styles.oneshotSettingsSeparator}

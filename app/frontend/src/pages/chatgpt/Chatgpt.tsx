@@ -32,7 +32,7 @@ import { GPT4VSettings } from "../../components/GPT4VSettings";
 export function Component(): JSX.Element {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [promptTemplate, setPromptTemplate] = useState<string>("");
-    const [retrieveCount, setRetrieveCount] = useState<number>(3);
+    const [retrieveCount, setRetrieveCount] = useState<number>(0);
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
     const [shouldStream, setShouldStream] = useState<boolean>(true);
@@ -261,10 +261,11 @@ export function Component(): JSX.Element {
                 <div className={styles.chatContainer}>
                     {!lastQuestionRef.current ? (
                         <div className={styles.chatEmptyState}>
+                            <h2>Athena KI-Testphase: Feedback zur Qualität im Teamskanal erwünscht!</h2>
                             <SparkleFilled fontSize={"120px"} primaryFill={"#9CBF2B"} aria-hidden="true" aria-label="Chatgpt logo" />
-                            <h1 className={styles.chatEmptyStateTitle}>Chatte mit der PCS Wissensdatenbank</h1>
-                            <h2 className={styles.chatEmptyStateSubtitle}>Stelle eine Frage zu den PCS Geräten oder probiere eins der Beispiele</h2>
-                            <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} />
+                            <h1 className={styles.chatEmptyStateTitle}>Chatte mit ChatGPT, ohne Verwendung der PCS Wissensdatenbank</h1>
+                            <h2 className={styles.chatEmptyStateSubtitle}>Hier zwei Beispiele:</h2>
+                            <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} tabName={"chatgptoriginal"} />
                         </div>
                     ) : (
                         <div className={styles.chatMessageStream}>
@@ -359,39 +360,10 @@ export function Component(): JSX.Element {
                     <TextField
                         className={styles.chatSettingsSeparator}
                         defaultValue={promptTemplate}
-                        label="Eingabeaufforderung überschreiben"
+                        label="Prompt Vorlage überschreiben"
                         multiline
                         autoAdjustHeight
                         onChange={onPromptTemplateChange}
-                    />
-
-                    <SpinButton
-                        className={styles.chatSettingsSeparator}
-                        label="Anzahl von Textabschnitten"
-                        min={1}
-                        max={50}
-                        defaultValue={retrieveCount.toString()}
-                        onChange={onRetrieveCountChange}
-                    />
-                    <TextField className={styles.chatSettingsSeparator} label="Exclude category" onChange={onExcludeCategoryChanged} />
-                    <Checkbox
-                        className={styles.chatSettingsSeparator}
-                        checked={useSemanticRanker}
-                        label="Semantische Rangliste für die Suche verwenden"
-                        onChange={onUseSemanticRankerChange}
-                    />
-                    <Checkbox
-                        className={styles.chatSettingsSeparator}
-                        checked={useSemanticCaptions}
-                        label="Verwendung von kontextbezogenen Zusammenfassungen anstelle von ganzen Dokumenten"
-                        onChange={onUseSemanticCaptionsChange}
-                        disabled={!useSemanticRanker}
-                    />
-                    <Checkbox
-                        className={styles.chatSettingsSeparator}
-                        checked={useSuggestFollowupQuestions}
-                        label="Folgefragen vorschlagen"
-                        onChange={onUseSuggestFollowupQuestionsChange}
                     />
 
                     {showGPT4VOptions && (
@@ -404,12 +376,6 @@ export function Component(): JSX.Element {
                             updateGPT4VInputs={inputs => setGPT4VInput(inputs)}
                         />
                     )}
-
-                    <VectorSettings
-                        showImageOptions={useGPT4V && showGPT4VOptions}
-                        updateVectorFields={(options: VectorFieldOptions[]) => setVectorFieldList(options)}
-                        updateRetrievalMode={(retrievalMode: RetrievalMode) => setRetrievalMode(retrievalMode)}
-                    />
 
                     {useLogin && (
                         <Checkbox
@@ -430,7 +396,6 @@ export function Component(): JSX.Element {
                         />
                     )}
 
-                    <Checkbox className={styles.chatSettingsSeparator} checked={shouldStream} label="Antworten streamen" onChange={onShouldStreamChange} />
                     {useLogin && <TokenClaimsDisplay />}
                 </Panel>
             </div>

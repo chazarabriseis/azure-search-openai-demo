@@ -24,7 +24,7 @@ class RetrieveThenReadApproach(Approach):
 
    
     system_chat_template = (
-        "Beantworte die Frage detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
+        "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
         + "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. "
         + "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel"
     )
