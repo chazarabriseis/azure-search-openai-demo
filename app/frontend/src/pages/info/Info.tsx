@@ -71,12 +71,12 @@ export function Component(): JSX.Element {
         "Verwende für die Fragestellung NUR die Fakten, die in der Liste der Quellen unten aufgeführt sind. " +
         "Gebe keine Antworten, die sich nicht auf die unten aufgeführten Quellen stützen. " +
         "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deinem Text verwendet wird. " +
-        "Wenn der Text nicht anhand der unten aufgeführten Quellen erstellt werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: ";
-    "Erstelle einen Marketing Text zu den Vorteilen eines Hardwarechecks " +
+        "Wenn der Text nicht anhand der unten aufgeführten Quellen erstellt werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: " +
+        "Erstelle einen Marketing Text zu den Vorteilen eines Hardwarechecks " +
         "Quellen: " +
         "info1.txt: INTUS Hardware ist zuverlässig. " +
         "info2.pdf: Da sich Technologien weiterentwickeln sollte die Firmware auf Sicherheitslücken geprüft werden. " +
-        "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [info1.txt]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info2.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.  ";
+        "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [info1.txt]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info2.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.";
 
     const chatGPTPrompt = "Der Assistent chattet wie eine chatGPT Anwendung und ignoriert dabei die unten angegebene Quellen.";
 
@@ -225,14 +225,15 @@ export function Component(): JSX.Element {
                     <h2>Funktionsweise</h2>
                     <div className={styles.oneshotQuestionInput}>
                         <div className={styles.list}>
-                            Für die Athena KI haben wir keine neues Sprach Modell trainiert, sondern wir verwenden eine Logik, um den Sprachmodel zusammen mit
-                            Eurer Frage mögliche Antworten mitzugeben. Diese möglichen Antworten werden basierend auf den Wörtern, welche Ihr in der Frage
-                            verwendet aus den Textabschnitten der PCS-Wissensdatenbank gezogen. Die 5 relevantesten Textasbschnitte werden zusammen mit einem
-                            Prompt, der sagt was die Aufgabe ist, und eurer Frage an das GPT-3.5-turbi Modell geschickt und liefert eine Antwort. Ein leicht
-                            abgeänderter Prompt kann zu sehr verschiedenen Antowrten führen, deshalb formuliert eure Fragen um, wenn Ihr mit der Antwort noch
-                            nicht zufrieden seit.
+                            Für die Athena KI haben wir kein neues Sprachmodell trainiert, sondern wir verwenden die Retrieval Augmented Generation (RAG) Logik:
+                            Dem Sprachmodell (GPT-3.5-turbo) wird zusammen mit deiner Frage Textabschnitte, aus denen die Antwort abgeleitet werden kann
+                            mitgegeben. Die Textabschnitte werden basierend auf den Wörtern, die Sie in der Frage verwenden, aus der PCS-Wissensdatenbank
+                            gezogen. Die fünf relevantesten Textabschnitte werden zusammen mit einem Prompt, der die Aufgabe beschreibt, und deiner Frage an das
+                            GPT-3.5-turbo-Modell geschickt. Es liefert dann eine Antwort. Ein leicht abgeänderter Prompt kann zu sehr unterschiedlichen
+                            Antworten führen. Deshalb formuliere die Fragen um, wenn du mit der Antwort noch nicht zufrieden bist, und gebe uns Feedback wie du
+                            die Fragen stellst, um die besten antworten zu erhalten.
                         </div>
-                        <img src={"Athena Workflow.png"} alt="Athena Workflow" />
+                        <img src={"AthenaWorkflow.png"} alt="" />
                         <div className={styles.list}>Weiterentwicklung von https://github.com/Azure-Samples/azure-search-openai-demo</div>
                     </div>
                 </div>

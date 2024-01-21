@@ -12,8 +12,6 @@ import { to } from "@react-spring/web";
 
 interface Props {
     disabled: boolean;
-    question: string;
-    answer: ChatAppResponse;
     tabName: string;
 }
 
@@ -21,12 +19,18 @@ const client = useLogin ? useMsal().instance : undefined;
 
 const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 300 } };
 
-const selectedThemen = [];
-
 const dropdownCorrectnessOptions = [
     { key: "ja", text: "Ja" },
     { key: "teils", text: "Teils" },
-    { key: "nein", text: "Nein" }
+    { key: "nein", text: "Nein" },
+    { key: "nicht beurteilbar", text: "Nicht beurteilbar" }
+];
+
+const dropdownBenefitsOptions = [
+    { key: "Suchaufwand in interner Doku erspart.", text: "Suchaufwand in interner Doku erspart." },
+    { key: "Rücksprache mit Kollegen erspart.", text: "Rücksprache mit Kollegen erspart." },
+    { key: "Rücksprache mit Experten erspart.", text: "Rücksprache mit Experten erspart." },
+    { key: "Sonstiges, siehe unten:", text: "Sonstiges, siehe unten:" }
 ];
 
 const dropdownThemenOptions = [
@@ -56,14 +60,7 @@ const dropdownThemenOptions = [
     { key: "Sonstiges", text: "Sonstiges" }
 ];
 
-const dropdownBenefitsOptions = [
-    { key: "Suchaufwand in interner Doku erspart.", text: "Suchaufwand in interner Doku erspart." },
-    { key: "Rücksprache mit Kollegen erspart.", text: "Rücksprache mit Kollegen erspart." },
-    { key: "Rücksprache mit Experten erspart.", text: "Rücksprache mit Experten erspart." },
-    { key: "Sonstiges, siehe unten:", text: "Sonstiges, siehe unten:" }
-];
-
-export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) => {
+export const EvaluationInputChat = ({ disabled, tabName }: Props) => {
     const [showInfo, setShowInfo] = useState(false);
 
     const { instance } = useMsal();
@@ -89,26 +86,6 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
         }
     };
 
-    const [handbuch, setHandbuch] = useState<string>("");
-
-    const onHandbuchChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        if (!newValue) {
-            setHandbuch("");
-        } else if (newValue.length <= 1000) {
-            setHandbuch(newValue);
-        }
-    };
-
-    const [anmerkung, setAnmerkung] = useState<string>("");
-
-    const onAnmerkungChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        if (!newValue) {
-            setAnmerkung("");
-        } else if (newValue.length <= 1000) {
-            setAnmerkung(newValue);
-        }
-    };
-
     const [sonstiges, setSonstiges] = useState<string>("");
 
     const onSonstigesChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -119,74 +96,33 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
         }
     };
 
-    const [supportTicketID, setSupportTicketID] = useState<string>("");
+    const [selectedBenefits, setSelectedBenefits] = useState<IDropdownOption[]>([]);
 
-    const onSupportTicketIDChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        if (!newValue) {
-            setSupportTicketID("");
-        } else if (newValue.length <= 1000) {
-            setSupportTicketID(newValue);
+    const onChangeSelectedBenefit = (
+        event: React.FormEvent<HTMLDivElement> | undefined,
+        item: IDropdownOption<any> | undefined,
+        index: number | undefined
+    ): void => {
+        if (!item) {
+            // Handle the case when item is undefined
+            console.log("Keine Auswahl!");
+            return;
         }
-    };
+        const updatedSelection = [...selectedBenefits];
 
-    const makeApiRequest = async () => {
-        const token = client ? await getToken(client) : undefined;
-        const contextList = answer.choices[0].context.thoughts[1].description;
-        const context: string[] = [];
-        if (contextList.length > 0) {
-            for (const dict of contextList) {
-                if ("sourcepage" in dict) {
-                    context.push(dict["sourcepage"]);
-                }
+        if (item.selected) {
+            // Add the selected item to the array
+            updatedSelection.push(item);
+        } else {
+            // Remove the unselected item from the array
+            const indexToRemove = updatedSelection.findIndex(option => option.key === item.key);
+            if (indexToRemove !== -1) {
+                updatedSelection.splice(indexToRemove, 1);
             }
         }
-        const themenListe = selectedThemen.map(item => item.text);
-        const benefitsListe = selectedBenefits.map(item => item.text);
 
-        const currentDatetime: Date = new Date();
-        const newline = {
-            TabName: tabName,
-            Frage: answer.choices[0].context.thoughts[0].description,
-            // Prompt: answer.choices[0].context.thoughts[2].description[0],
-            AntwortChatGPT: answer.choices[0].message.content,
-            Kontext: context,
-            Korrektheit: selectedCorrectness?.text,
-            korrekte_Antwort: correct_answer,
-            Quelle: handbuch,
-            Anmerkung: anmerkung,
-            TicketID: supportTicketID,
-            Benefit: benefitsListe,
-            Sonstiges: sonstiges,
-            Thema: themenListe,
-            Benutzer: user,
-            Zeitstempel: currentDatetime
-        };
-        const dataToAppend = JSON.stringify(newline) + "\n";
-
-        try {
-            const result = await appendToBlobApi(dataToAppend, token);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setShowInfo(true);
-            setUser("");
-            setAnmerkung("");
-            setSonstiges("");
-            setHandbuch("");
-            setSupportTicketID("");
-            setCorrectAnswer("");
-            setSelectedBenefits([]);
-            setSelectedCorrectness(undefined);
-            setSelectedThemen([]);
-            const closeTimeoutId = setTimeout(() => {
-                setShowInfo(false);
-            }, 6000);
-        }
+        setSelectedBenefits(updatedSelection);
     };
-
-    const [selectedCorrectness, setSelectedCorrectness] = useState<IDropdownOption>();
-
-    const [selectedBenefits, setSelectedBenefits] = useState<IDropdownOption[]>([]);
 
     const [selectedThemen, setSelectedThemen] = useState<IDropdownOption[]>([]);
 
@@ -216,31 +152,53 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
         setSelectedThemen(updatedSelection);
     };
 
-    const onChangeSelectedBenefit = (
-        event: React.FormEvent<HTMLDivElement> | undefined,
-        item: IDropdownOption<any> | undefined,
-        index: number | undefined
-    ): void => {
-        if (!item) {
-            // Handle the case when item is undefined
-            console.log("Keine Auswahl!");
-            return;
-        }
-        const updatedSelection = [...selectedBenefits];
-
-        if (item.selected) {
-            // Add the selected item to the array
-            updatedSelection.push(item);
-        } else {
-            // Remove the unselected item from the array
-            const indexToRemove = updatedSelection.findIndex(option => option.key === item.key);
-            if (indexToRemove !== -1) {
-                updatedSelection.splice(indexToRemove, 1);
+    const makeApiRequest = async () => {
+        const token = client ? await getToken(client) : undefined;
+        /*
+        const contextList = answer.choices[0].context.thoughts[1].description;
+        const context: string[] = [];
+        if (contextList.length > 0) {
+            for (const dict of contextList) {
+                if ("sourcepage" in dict) {
+                    context.push(dict["sourcepage"]);
+                }
             }
         }
+        */
+        const currentDatetime: Date = new Date();
+        const benefitsListe = selectedBenefits.map(item => item.text);
+        const newline = {
+            TabName: tabName,
+            //Frage: answer.choices[0].context.thoughts[0].description,
+            //AntwortChatGPT: answer.choices[0].message.content,
+            //Kontext: context,
+            Korrektheit: selectedCorrectness?.text,
+            korrekte_Antwort: correct_answer,
+            Benefit: benefitsListe,
+            Sonstiges: sonstiges,
+            Benutzer: user,
+            Zeitstempel: currentDatetime
+        };
+        const dataToAppend = JSON.stringify(newline) + "\n";
 
-        setSelectedBenefits(updatedSelection);
+        try {
+            const result = await appendToBlobApi(dataToAppend, token);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setShowInfo(true);
+            setUser("");
+            setSonstiges("");
+            setCorrectAnswer("");
+            setSelectedBenefits([]);
+            setSelectedCorrectness(undefined);
+            const closeTimeoutId = setTimeout(() => {
+                setShowInfo(false);
+            }, 6000);
+        }
     };
+
+    const [selectedCorrectness, setSelectedCorrectness] = useState<IDropdownOption>();
 
     return (
         <div>
@@ -263,7 +221,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
                 <Stack className={styles.evaluationContainer}>
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
-                            label="Ist die Antwort korrekt?"
+                            label="Ist die Antwort inhaltlich korrekt?"
                             selectedKey={selectedCorrectness ? selectedCorrectness.key : undefined}
                             onChange={(e, opt, index) => {
                                 setSelectedCorrectness(opt);
@@ -273,55 +231,28 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
                             styles={dropdownStyles}
                         />
                     </Stack>
-                    {(selectedCorrectness?.text === "Nein" || selectedCorrectness?.text === "Teils") && (
+                    {(selectedCorrectness?.text === "Nein" || selectedCorrectness?.text === "Teils" || selectedCorrectness?.text === "Nicht beurteilbar") && (
                         <div>
                             <Stack horizontal className={styles.evaluationInputTextContainer}>
                                 <TextField
                                     className={styles.evaluationInputTextContainer}
                                     resizable={false}
-                                    placeholder={"Bitte gib die richtige Antwort an: "}
+                                    placeholder={"Was hat nicht gepasst?"}
                                     value={correct_answer}
                                     onChange={onCorrectAnswerChange}
-                                />
-                            </Stack>
-                            <Stack horizontal className={styles.evaluationInputTextContainer}>
-                                <TextField
-                                    className={styles.evaluationInputTextContainer}
-                                    resizable={false}
-                                    placeholder={"In welchem Handbuch steht die Antwort? "}
-                                    value={handbuch}
-                                    onChange={onHandbuchChange}
-                                />
-                            </Stack>
-                            <Stack horizontal className={styles.evaluationInputTextContainer}>
-                                <TextField
-                                    className={styles.evaluationInputTextContainer}
-                                    resizable={false}
-                                    placeholder={"Anmerkung: "}
-                                    value={anmerkung}
-                                    onChange={onAnmerkungChange}
                                 />
                             </Stack>
                         </div>
                     )}
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
-                            label="Auf welches Thema bezieht sich die Frage?"
+                            label="Auf welches Thema bezog sich der Chat?"
                             selectedKeys={selectedThemen?.map(option => option.key.toString())}
                             onChange={onChangeSelectedThemen}
                             placeholder="Wähle eine Option"
                             options={dropdownThemenOptions}
                             styles={dropdownStyles}
                             multiSelect
-                        />
-                    </Stack>
-                    <Stack horizontal className={styles.evaluationInputTextContainer}>
-                        <TextField
-                            className={styles.evaluationInputTextContainer}
-                            resizable={false}
-                            placeholder={"Support Ticket ID: "}
-                            value={supportTicketID}
-                            onChange={onSupportTicketIDChange}
                         />
                     </Stack>
                     <Stack horizontal className={styles.evaluationInputContainer}>

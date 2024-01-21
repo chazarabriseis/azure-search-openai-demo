@@ -12,8 +12,6 @@ import { to } from "@react-spring/web";
 
 interface Props {
     disabled: boolean;
-    question: string;
-    answer: ChatAppResponse;
     tabName: string;
 }
 
@@ -34,7 +32,7 @@ const dropdownBenefitsOptions = [
     { key: "Sonstiges, siehe unten:", text: "Sonstiges, siehe unten:" }
 ];
 
-export const EvaluationInputMarketing = ({ disabled, question, answer, tabName }: Props) => {
+export const EvaluationInputChatGPT = ({ disabled, tabName }: Props) => {
     const [showInfo, setShowInfo] = useState(false);
 
     const { instance } = useMsal();
@@ -99,6 +97,7 @@ export const EvaluationInputMarketing = ({ disabled, question, answer, tabName }
 
     const makeApiRequest = async () => {
         const token = client ? await getToken(client) : undefined;
+        /*
         const contextList = answer.choices[0].context.thoughts[1].description;
         const context: string[] = [];
         if (contextList.length > 0) {
@@ -108,13 +107,14 @@ export const EvaluationInputMarketing = ({ disabled, question, answer, tabName }
                 }
             }
         }
+        */
         const currentDatetime: Date = new Date();
         const benefitsListe = selectedBenefits.map(item => item.text);
         const newline = {
             TabName: tabName,
-            Frage: answer.choices[0].context.thoughts[0].description,
-            AntwortChatGPT: answer.choices[0].message.content,
-            Kontext: context,
+            //Frage: answer.choices[0].context.thoughts[0].description,
+            //AntwortChatGPT: answer.choices[0].message.content,
+            //Kontext: context,
             Korrektheit: selectedCorrectness?.text,
             korrekte_Antwort: correct_answer,
             Benefit: benefitsListe,

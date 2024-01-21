@@ -211,7 +211,9 @@ export function Component(): JSX.Element {
             </div>
             <div className={styles.oneshotBottomSection}>
                 <div className={styles.oneshotQuestionInput}>
-                    {!isLoading && answer && !error && <EvaluationInputMarketing disabled={isLoading} question={question} answer={answer} />}
+                    {!isLoading && answer && !error && (
+                        <EvaluationInputMarketing disabled={isLoading} question={question} answer={answer} tabName={"marketing"} />
+                    )}
                 </div>
             </div>
 

@@ -28,6 +28,7 @@ import { VectorSettings } from "../../components/VectorSettings";
 import { useMsal } from "@azure/msal-react";
 import { TokenClaimsDisplay } from "../../components/TokenClaimsDisplay";
 import { GPT4VSettings } from "../../components/GPT4VSettings";
+import { EvaluationInputChatGPT } from "../../components/EvaluationInputChatGPT";
 
 export function Component(): JSX.Element {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
@@ -334,6 +335,12 @@ export function Component(): JSX.Element {
                             disabled={isLoading}
                             onSend={question => makeApiRequest(question)}
                         />
+                    </div>
+                </div>
+
+                <div className={styles.emailBottomSection}>
+                    <div className={styles.emailQuestionInput}>
+                        {!isLoading && !error && <EvaluationInputChatGPT disabled={isLoading} tabName={"chatGPT"} />}
                     </div>
                 </div>
 

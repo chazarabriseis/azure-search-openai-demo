@@ -1,0 +1,29 @@
+.evaluationContainer {
+    width: 500px;
+    padding: 20px;
+}
+
+.evaluationInputTextContainer {
+    height: auto;
+    width: 100%;
+    padding: 5px;
+    background: #9cbf2b;
+}
+
+.evaluationInputContainer {
+    height: auto;
+    width: 100%;
+    padding: 5px;
+    background: #9cbf2b;
+}
+
+.evaluationInputTextArea {
+    width: 100%;
+    line-height: 40px;
+}
+
+.evaluationInputButtonsContainer {
+    width: 100%;
+    height: 60px;
+    background-color: #9cbf2b;
+}

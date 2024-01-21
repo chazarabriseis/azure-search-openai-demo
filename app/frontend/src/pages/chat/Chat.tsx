@@ -28,6 +28,7 @@ import { VectorSettings } from "../../components/VectorSettings";
 import { useMsal } from "@azure/msal-react";
 import { TokenClaimsDisplay } from "../../components/TokenClaimsDisplay";
 import { GPT4VSettings } from "../../components/GPT4VSettings";
+import { EvaluationInputChat } from "../../components/EvaluationInputChat";
 
 const Chat = () => {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
@@ -335,6 +336,10 @@ const Chat = () => {
                             onSend={question => makeApiRequest(question)}
                         />
                     </div>
+                </div>
+
+                <div className={styles.emailBottomSection}>
+                    <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
                 </div>
 
                 {answers.length > 0 && activeAnalysisPanelTab && (

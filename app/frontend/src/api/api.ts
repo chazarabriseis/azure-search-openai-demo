@@ -78,7 +78,6 @@ export function getCitationFilePath(citation: string): string {
 
 export async function appendToBlobApi(dataToAppend: string, idToken: string | undefined): Promise<string> {
     console.log("writing to Blob");
-    console.log(dataToAppend);
 
     const response = await fetch(`${BACKEND_URI}/appendtoBlob`, {
         method: "POST",
@@ -86,7 +85,6 @@ export async function appendToBlobApi(dataToAppend: string, idToken: string | un
         body: JSON.stringify({ data: dataToAppend })
     });
 
-    console.log(response);
     if (response.status == 200) {
         return "Success";
     } else {
