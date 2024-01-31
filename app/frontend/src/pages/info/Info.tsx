@@ -97,7 +97,7 @@ export function Component(): JSX.Element {
                             >
                                 PCS-Athena KI
                             </a>
-                            Teams Kanal oder meldet Euch bei LKlemens@pcs.com oder FWittman@pcs.com.
+                            Teams Kanal oder meldet Euch bei LKlemets@pcs.com oder FWittmann@pcs.com.
                         </div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ export function Component(): JSX.Element {
                     </div>
                 </div>
                 <div className={styles.infoItem}>
-                    <h2>PL/MarCom</h2>
+                    <h2>PM/MarCom</h2>
                     <div className={styles.oneshotQuestionInput}>
                         <div className={styles.list}>
                             <ul>
@@ -186,7 +186,7 @@ export function Component(): JSX.Element {
                     </div>
                 </div>
                 <div className={styles.infoItem}>
-                    <h2>Bestandteil der in der KI hinterlegten PCS-Quellen (235 PDFs)</h2>
+                    <h2>Bestandteil der in der KI hinterlegten PCS-Quellen (436 PDFs (Stand 31.01.2024))</h2>
                     <div className={styles.oneshotQuestionInput}>
                         <div className={styles.list}>
                             <ul>
@@ -215,7 +215,7 @@ export function Component(): JSX.Element {
                         <div className={styles.list}>
                             Falls Ihr weitere Dokumente habt, welche Ihr der PCS Wissensdatenbank hinzufügen möchtet, können wir diese gerne indizieren. Dazu
                             einfach das Dokument in{" "}
-                            <span className="italic-word">"K://Projekte/juba/Dokumente/Athena Datenquellen/neue oder aktualisierte Datenquelle"</span> ablegen
+                            <span className="italic-word">"K:\Projekte\juba\Dokumente\Athena Datenquellen\neue oder aktualisierte Datenquelle"</span> ablegen
                             und im <span className="italic-word">PCS - AThena KI Team</span> im Kanal <span className="italic-word">Datenquellen</span> Bescheid
                             geben. Hier seht Ihr auch welche Datenquellen schon alle für Athena indiziert sind.
                         </div>
@@ -233,7 +233,6 @@ export function Component(): JSX.Element {
                             Antworten führen. Deshalb formuliere die Fragen um, wenn du mit der Antwort noch nicht zufrieden bist, und gebe uns Feedback wie du
                             die Fragen stellst, um die besten antworten zu erhalten.
                         </div>
-                        <img src={"AthenaWorkflow.png"} alt="" />
                         <div className={styles.list}>Weiterentwicklung von https://github.com/Azure-Samples/azure-search-openai-demo</div>
                     </div>
                 </div>
