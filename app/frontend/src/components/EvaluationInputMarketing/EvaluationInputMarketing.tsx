@@ -190,7 +190,7 @@ export const EvaluationInputMarketing = ({ disabled, question, answer, tabName }
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
                             label="Was hat dir die Antwort gebracht?"
-                            selectedKey={selectedBenefits?.map(option => option.key.toString())}
+                            selectedKeys={selectedBenefits?.map(option => option.key.toString())}
                             onChange={onChangeSelectedBenefit}
                             placeholder="Wähle eine Option"
                             options={dropdownBenefitsOptions}

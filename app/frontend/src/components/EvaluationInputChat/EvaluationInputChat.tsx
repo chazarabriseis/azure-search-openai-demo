@@ -57,6 +57,8 @@ const dropdownThemenOptions = [
     { key: "Fingerprint", text: "Fingerprint" },
     { key: "Kaufmännisches", text: "Kaufmännisches" },
     { key: "Rechtliches", text: "Rechtliches" },
+    { key: "Geräte-Firmware", text: "Geräte-Firmware" },
+    { key: "Leser-Firmware", text: "Leser-Firmware" },
     { key: "Sonstiges", text: "Sonstiges" }
 ];
 
@@ -167,6 +169,8 @@ export const EvaluationInputChat = ({ disabled, tabName }: Props) => {
         */
         const currentDatetime: Date = new Date();
         const benefitsListe = selectedBenefits.map(item => item.text);
+        const themenListe = selectedThemen.map(item => item.text);
+
         const newline = {
             TabName: tabName,
             //Frage: answer.choices[0].context.thoughts[0].description,
@@ -175,6 +179,7 @@ export const EvaluationInputChat = ({ disabled, tabName }: Props) => {
             Korrektheit: selectedCorrectness?.text,
             korrekte_Antwort: correct_answer,
             Benefit: benefitsListe,
+            Thema: themenListe,
             Sonstiges: sonstiges,
             Benutzer: user,
             Zeitstempel: currentDatetime
@@ -258,7 +263,7 @@ export const EvaluationInputChat = ({ disabled, tabName }: Props) => {
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
                             label="Was hat dir die Antwort gebracht?"
-                            selectedKey={selectedBenefits?.map(option => option.key.toString())}
+                            selectedKeys={selectedBenefits?.map(option => option.key.toString())}
                             onChange={onChangeSelectedBenefit}
                             placeholder="Wähle eine Option"
                             options={dropdownBenefitsOptions}

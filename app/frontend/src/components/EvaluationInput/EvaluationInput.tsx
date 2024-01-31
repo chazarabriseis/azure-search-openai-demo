@@ -53,6 +53,8 @@ const dropdownThemenOptions = [
     { key: "Fingerprint", text: "Fingerprint" },
     { key: "Kaufmännisches", text: "Kaufmännisches" },
     { key: "Rechtliches", text: "Rechtliches" },
+    { key: "Geräte-Firmware", text: "Geräte-Firmware" },
+    { key: "Leser-Firmware", text: "Leser-Firmware" },
     { key: "Sonstiges", text: "Sonstiges" }
 ];
 
@@ -327,7 +329,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
                     <Stack horizontal className={styles.evaluationInputContainer}>
                         <Dropdown
                             label="Was hat dir die Antwort gebracht?"
-                            selectedKey={selectedBenefits?.map(option => option.key.toString())}
+                            selectedKeys={selectedBenefits?.map(option => option.key.toString())}
                             onChange={onChangeSelectedBenefit}
                             placeholder="Wähle eine Option"
                             options={dropdownBenefitsOptions}
