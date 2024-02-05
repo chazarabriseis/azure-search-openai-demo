@@ -43,7 +43,7 @@ if ($env:VISION_SECRET_NAME) {
   $visionKeyVaultkey = "--visionKeyVaultkey $env:VISION_SECRET_NAME"
 }
 
-$dataArg = "`"$cwd/data/*`""
+$dataArg = "`"$cwd/data/Helpcenter Service Startseite-v171-20240117_125945.pdf`""
 if ($env:USE_GPT4V -eq $true) {
   $searchImagesArg = "--searchimages"
 }
@@ -59,6 +59,6 @@ $argumentList = "./scripts/prepdocs.py $dataArg $adlsGen2StorageAccountArg $adls
 "--openaiorg `"$env:OPENAI_ORGANIZATION`" --openaideployment `"$env:AZURE_OPENAI_EMB_DEPLOYMENT`" " + `
 "--openaimodelname `"$env:AZURE_OPENAI_EMB_MODEL_NAME`" --index $env:AZURE_SEARCH_INDEX " + `
 "$searchImagesArg $visionEndpointArg $visionKeyArg $visionKeyVaultkey $visionKeyVaultName " + `
-"--formrecognizerservice $env:AZURE_FORMRECOGNIZER_SERVICE $tenantArg -v "
+"--formrecognizerservice $env:AZURE_FORMRECOGNIZER_SERVICE $tenantArg --remove -v "
 
 Start-Process -FilePath $venvPythonPath -ArgumentList $argumentList -Wait -NoNewWindow

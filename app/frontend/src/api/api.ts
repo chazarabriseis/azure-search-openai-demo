@@ -32,6 +32,21 @@ export async function askApi(request: ChatAppRequest, idToken: string | undefine
     return parsedResponse as ChatAppResponse;
 }
 
+export async function askDetailApi(request: ChatAppRequest, idToken: string | undefined): Promise<ChatAppResponse> {
+    const response = await fetch(`${BACKEND_URI}/askdetail`, {
+        method: "POST",
+        headers: getHeaders(idToken),
+        body: JSON.stringify(request)
+    });
+
+    const parsedResponse: ChatAppResponseOrError = await response.json();
+    if (response.status > 299 || !response.ok) {
+        throw Error(parsedResponse.error || "Unknown error");
+    }
+
+    return parsedResponse as ChatAppResponse;
+}
+
 export async function marketingApi(request: ChatAppRequest, idToken: string | undefined): Promise<ChatAppResponse> {
     const response = await fetch(`${BACKEND_URI}/marketingqa`, {
         method: "POST",

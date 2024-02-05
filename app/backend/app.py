@@ -36,6 +36,7 @@ from approaches.approach import Approach
 from approaches.chatreadretrieveread import ChatReadRetrieveReadApproach
 from approaches.chatreadretrievereadvision import ChatReadRetrieveReadVisionApproach
 from approaches.retrievethenread import RetrieveThenReadApproach
+from approaches.retrievethenreaddetail import RetrieveThenReadDetailApproach
 from approaches.retrievethenreadvision import RetrieveThenReadVisionApproach
 from approaches.retrievethenreadmarketing import RetrieveThenReadMarketingApproach
 from approaches.chatreadretrievereadoriginal import ChatReadRetrieveReadOriginalApproach
@@ -44,6 +45,7 @@ from core.authentication import AuthenticationHelper
 CONFIG_OPENAI_TOKEN = "openai_token"
 CONFIG_CREDENTIAL = "azure_credential"
 CONFIG_ASK_APPROACH = "ask_approach"
+CONFIG_ASK_DETAIL_APPROACH = "ask_detail_approach"
 CONFIG_MARKETING_APPROACH = "marketing_approach"
 CONFIG_ASK_VISION_APPROACH = "ask_vision_approach"
 CONFIG_CHAT_VISION_APPROACH = "chat_vision_approach"
@@ -181,6 +183,28 @@ async def ask():
         return jsonify(r)
     except Exception as error:
         return error_response(error, "/ask")
+    
+@bp.route("/askdetail", methods=["POST"])
+async def askdetail():
+    if not request.is_json:
+        return jsonify({"error": "request must be json"}), 415
+    request_json = await request.get_json()
+    context = request_json.get("context", {})
+    auth_helper = current_app.config[CONFIG_AUTH_CLIENT]
+    try:
+        context["auth_claims"] = await auth_helper.get_auth_claims_if_enabled(request.headers)
+        use_gpt4v = context.get("overrides", {}).get("use_gpt4v", False)
+        approach: Approach
+        if use_gpt4v and CONFIG_ASK_VISION_APPROACH in current_app.config:
+            approach = cast(Approach, current_app.config[CONFIG_ASK_VISION_APPROACH])
+        else:
+            approach = cast(Approach, current_app.config[CONFIG_ASK_DETAIL_APPROACH])
+        r = await approach.run(
+            request_json["messages"], context=context, session_state=request_json.get("session_state")
+        )
+        return jsonify(r)
+    except Exception as error:
+        return error_response(error, "/askdetail")
 
 
 @bp.route("/marketingqa", methods=["POST"])
@@ -408,6 +432,20 @@ async def setup_clients():
     # Various approaches to integrate GPT and external knowledge, most applications will use a single one of these patterns
     # or some derivative, here we include several for exploration purposes
     current_app.config[CONFIG_ASK_APPROACH] = RetrieveThenReadApproach(
+        search_client=search_client,
+        openai_client=openai_client,
+        auth_helper=auth_helper,
+        chatgpt_model=OPENAI_CHATGPT_MODEL,
+        chatgpt_deployment=AZURE_OPENAI_CHATGPT_DEPLOYMENT,
+        embedding_model=OPENAI_EMB_MODEL,
+        embedding_deployment=AZURE_OPENAI_EMB_DEPLOYMENT,
+        sourcepage_field=KB_FIELDS_SOURCEPAGE,
+        content_field=KB_FIELDS_CONTENT,
+        query_language=AZURE_SEARCH_QUERY_LANGUAGE,
+        query_speller=AZURE_SEARCH_QUERY_SPELLER,
+    )
+
+    current_app.config[CONFIG_ASK_DETAIL_APPROACH] = RetrieveThenReadDetailApproach(
         search_client=search_client,
         openai_client=openai_client,
         auth_helper=auth_helper,

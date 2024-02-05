@@ -44,9 +44,9 @@ export const QuestionInput = ({ onSend, disabled, placeholder, clearOnSend, init
     const onQuestionChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setQuestion("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 3000) {
             setQuestion(newValue);
-        }
+        } // catch if the input was too long
     };
 
     const { instance } = useMsal();
@@ -63,7 +63,7 @@ export const QuestionInput = ({ onSend, disabled, placeholder, clearOnSend, init
                 className={styles.questionInputTextArea}
                 disabled={disableRequiredAccessControl}
                 placeholder={placeholder}
-                multiline
+                multiline={true}
                 resizable={false}
                 borderless
                 value={question}
