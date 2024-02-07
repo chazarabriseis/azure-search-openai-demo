@@ -13,6 +13,8 @@ import { to } from "@react-spring/web";
 interface Props {
     disabled: boolean;
     tabName: string;
+    // answer: ChatAppResponse;
+    // question: string;
 }
 
 const client = useLogin ? useMsal().instance : undefined;

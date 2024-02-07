@@ -21,7 +21,6 @@ class RetrieveThenReadApproach(Approach):
     (answer) with that prompt.
     This is for the Q&A Tab
     """
-
    
     system_chat_template = (
         "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
@@ -34,12 +33,10 @@ class RetrieveThenReadApproach(Approach):
         'Was ist der KP1 Satz?'
 
         Quellen:
-        info1.txt: Mit dem KP1 Satz können Terminals und Leser parametriert werden. 
-        info2.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden.
-        info3.pdf: Es können Berechtigungen vergeben werden.
-        info4.pdf: Es können die Anzahl der Türen angepasst werder.
+        TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz können Terminals und Leser parametriert werden. 
+        TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden.
         """
-    answer = "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf]."
+    answer = "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [TPI_Handbuch_4.0.2_D3000-420_25.pdf], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [TPI_Handbuch_4.0.2_D3000-420_25.pdf]"
     def __init__(
         self,
         *,

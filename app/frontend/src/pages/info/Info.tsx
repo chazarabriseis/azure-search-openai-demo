@@ -14,6 +14,12 @@ export function Component(): JSX.Element {
         "Verwendet die PCS Wissendatenbank"
     ];
 
+    const itemsQaDetail = [
+        "Bietet detaillierte Antworten auf gestellte Fragen",
+        "Ermöglicht die Verbesserung der Qualität und das Training der Wissensdatenbank",
+        "Verwendet die PCS Wissendatenbank"
+    ];
+
     const itemsMarketing = [
         "Erlaubt die Eingabe individueller Prompts zusammen mit Fragen",
         "Nutzer werden gebeten, hilfreiche Prompts für zufriedenstellende Ergebnisse zu notieren ",
@@ -57,6 +63,18 @@ export function Component(): JSX.Element {
 
     const qaPrompt =
         "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen. " +
+        "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. " +
+        "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: " +
+        "Was ist der KP1 Satz? " +
+        "Quellen: " +
+        "info1.txt: Mit dem KP1 Satz können Terminals und Leser parametriert werden. " +
+        "info2.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden. " +
+        "info3.pdf: Es können Berechtigungen vergeben werden. " +
+        "info4.pdf: Es können die Anzahl der Türen angepasst werder. " +
+        "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf].";
+
+    const qaDetailPrompt =
+        "Beantworte die Frage detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen. " +
         "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. " +
         "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: " +
         "Was ist der KP1 Satz? " +
@@ -134,6 +152,23 @@ export function Component(): JSX.Element {
                             werden. Siehe dazu auch Tipps für die Formulierung eines Prompts. Der Default-Prompt (wird bei jedem Login neu geladen) und lautet:
                         </div>
                         <div className={styles.prompt}>{qaPrompt}</div>
+                    </div>
+                </div>
+                <div className={styles.infoItem}>
+                    <h2>Q&A Detail</h2>
+                    <div className={styles.oneshotQuestionInput}>
+                        <div className={styles.list}>
+                            <ul>
+                                {itemsQaDetail.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className={styles.hinweis}>
+                            Hinweis: Der Standard-Prompt für diese Funktion kann während Eurer eingeloggten Sitzung in den Einstellungen oben rechts verändert
+                            werden. Siehe dazu auch Tipps für die Formulierung eines Prompts. Der Default-Prompt (wird bei jedem Login neu geladen) und lautet:
+                        </div>
+                        <div className={styles.prompt}>{qaDetailPrompt}</div>
                     </div>
                 </div>
                 <div className={styles.infoItem}>

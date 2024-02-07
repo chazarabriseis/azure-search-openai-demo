@@ -54,7 +54,7 @@ if [ -n "$AZURE_TENANT_ID" ]; then
 fi
 
 ./scripts/.venv/bin/python ./scripts/prepdocs.py \
-'./data/Helpcenter Service Startseite-v171-20240117_125945.pdf' $adlsGen2StorageAccountArg $adlsGen2FilesystemArg $adlsGen2FilesystemPathArg $searchAnalyzerNameArg \
+'./data/*' $adlsGen2StorageAccountArg $adlsGen2FilesystemArg $adlsGen2FilesystemPathArg $searchAnalyzerNameArg \
 $aclArg  --storageaccount "$AZURE_STORAGE_ACCOUNT" \
 $searchImagesArg $visionEndpointArg $visionKeyArg $visionKeyVaultkey $visionKeyVaultName \
 --container "$AZURE_STORAGE_CONTAINER" --searchservice "$AZURE_SEARCH_SERVICE" \
@@ -62,4 +62,4 @@ $searchImagesArg $visionEndpointArg $visionKeyArg $visionKeyVaultkey $visionKeyV
 --openaimodelname "$AZURE_OPENAI_EMB_MODEL_NAME" --index "$AZURE_SEARCH_INDEX" \
 --formrecognizerservice "$AZURE_FORMRECOGNIZER_SERVICE" --openaimodelname "$AZURE_OPENAI_EMB_MODEL_NAME" \
 $tenantArg --openaihost "$OPENAI_HOST" \
---openaikey "$OPENAI_API_KEY" --remove -v
+--openaikey "$OPENAI_API_KEY" -v
