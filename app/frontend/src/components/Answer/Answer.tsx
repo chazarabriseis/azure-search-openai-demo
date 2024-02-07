@@ -14,7 +14,7 @@ interface Props {
     isStreaming: boolean;
     onCitationClicked: (filePath: string) => void;
     onThoughtProcessClicked: () => void;
-    onSupportingContentClicked: () => void;
+    // onSupportingContentClicked: () => void;
     onFollowupQuestionClicked?: (question: string) => void;
     showFollowupQuestions?: boolean;
 }
@@ -25,7 +25,7 @@ export const Answer = ({
     isStreaming,
     onCitationClicked,
     onThoughtProcessClicked,
-    onSupportingContentClicked,
+    // onSupportingContentClicked,
     onFollowupQuestionClicked,
     showFollowupQuestions
 }: Props) => {
@@ -44,18 +44,10 @@ export const Answer = ({
                         <IconButton
                             style={{ color: "black" }}
                             iconProps={{ iconName: "Lightbulb" }}
-                            title="Gedankengang anzeigen"
-                            ariaLabel="Gedankengang anzeigen"
+                            title="Infos anzeigen"
+                            ariaLabel="Infos anzeigen"
                             onClick={() => onThoughtProcessClicked()}
                             disabled={!answer.choices[0].context.thoughts?.length}
-                        />
-                        <IconButton
-                            style={{ color: "black" }}
-                            iconProps={{ iconName: "ClipboardList" }}
-                            title="Unterstützende Inhalte anzeigen"
-                            ariaLabel="Unterstützende Inhalte anzeigen"
-                            onClick={() => onSupportingContentClicked()}
-                            disabled={!answer.choices[0].context.data_points}
                         />
                     </div>
                 </Stack>
