@@ -338,16 +338,6 @@ export function Component(): JSX.Element {
                     </div>
                 </div>
 
-                {!lastQuestionRef.current ? (
-                    <div className={styles.emailBottomSection}>
-                        <div className={styles.emailQuestionInput}>
-                            {!isLoading && !error && <EvaluationInputChatGPT disabled={isLoading} tabName={"chatGPT"} />}
-                        </div>
-                    </div>
-                ) : (
-                    <div></div>
-                )}
-
                 {answers.length > 0 && activeAnalysisPanelTab && (
                     <AnalysisPanel
                         className={styles.chatAnalysisPanel}
@@ -410,6 +400,15 @@ export function Component(): JSX.Element {
                     {useLogin && <TokenClaimsDisplay />}
                 </Panel>
             </div>
+            {lastQuestionRef.current ? (
+                <div className={styles.emailBottomSection}>
+                    <div className={styles.emailQuestionInput}>
+                        {!isLoading && !error && <EvaluationInputChatGPT disabled={isLoading} tabName={"chatGPT"} />}
+                    </div>
+                </div>
+            ) : (
+                <div></div>
+            )}
         </div>
     );
 }

@@ -2,7 +2,11 @@ import { Example } from "./Example";
 
 import styles from "./Example.module.css";
 
-const CHAT_EXAMPLES: string[] = ["Was ist der KP1 Satz?", "Wie viele Leser können am ACM40e angeschlossen werden?", "Wie binde ich via TCL ein Terminal an?"];
+const CHAT_EXAMPLES: string[] = [
+    "Was ist der KP1 Satz?",
+    'Wie viele Leser können am "INTUS ACM40e" angeschlossen werden?',
+    "Wie binde ich via TCL ein Terminal an?"
+];
 
 const CHATORIGINAL_EXAMPLES: string[] = [
     "Formuliere eine E-Mail an den Kunden: Der Kunde beschwert über fehlerhaftes Produkt und erwartet bis morgen eine Lösung. Er ist frustriert und droht mit Eskalation an die Geschäftsführung. Er erwartet eine schnelle Lösung für das Problem.",

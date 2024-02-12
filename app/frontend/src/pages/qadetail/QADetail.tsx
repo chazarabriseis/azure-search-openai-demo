@@ -175,6 +175,8 @@ export function Component(): JSX.Element {
                 <h2>Athena KI-Testphase: Feedback zur Qualität im Teamskanal erwünscht!</h2>
                 <SparkleFilled fontSize={"120px"} primaryFill={"#9CBF2B"} aria-hidden="true" aria-label="Chatgpt logo" />
                 <h1 className={styles.oneshotTitle}>Stelle eine Frage an die PCS-Wissensdatenbank und bewerte anschließend die Antwort.</h1>
+                <h3>Wenn du einen Produktnamen in deiner Frage verwenden willst, gib diesen in "" an. Zum Beispiel "INTUS ACM40e".</h3>
+
                 <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} tabName={"qa"} />
                 <div className={styles.oneshotQuestionInput}>
                     <QuestionInput placeholder="... ?" disabled={isLoading} initQuestion={question} onSend={question => makeApiRequest(question)} />

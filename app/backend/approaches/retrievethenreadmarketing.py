@@ -23,10 +23,9 @@ class RetrieveThenReadMarketingApproach(Approach):
     """
 
     system_chat_template = (
-        "Verwende für die Fragestellung NUR die Fakten, die in der Liste der Quellen unten aufgeführt sind."
-        + "Gebe keine Antworten, die sich nicht auf die unten aufgeführten Quellen stützen. "
+        "Verwende für die Antwort bezüglich den PCS Geräten Fakten, die in der Liste der Quellen unten aufgeführt sind. "
+        + "Verwende außerdem weitere Informationen, die relvant sind. "
         + "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deinem Text verwendet wird. "
-        + "Wenn der Text nicht anhand der unten aufgeführten Quellen erstellt werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel"
     )
 
     # shots/sample conversation
@@ -34,10 +33,9 @@ class RetrieveThenReadMarketingApproach(Approach):
 'Erstelle einen Marketing Text zu den Vorteilen eines Hardwarechecks '
 
 Quellen:
-info1.txt: INTUS Hardware ist zuverlässig. 
-info2.pdf: Da sich Technologien weiterentwickeln sollte die Firmware auf Sicherheitslücken geprüft werden.
+Präsentation_PCS_Unternehmen und Produkte_2023-10-25.pdf: INTUS Hardware ist zuverlässig. 
 """
-    answer = "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [info1.txt]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info2.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.  "
+    answer = "INTUS Hardware für Zeiterfassung und Zutrittskontrolle ist bekannt für ihre Zuverlässigkeit [Präsentation_PCS_Unternehmen und Produkte_2023-10-25.pdf]. In vielen Fällen sind INTUS Zeiterfassungsterminals und Zutrittskontrollmanager seit mehr als einem Jahrzehnt bei Kunden installiert.  Da sich Technologien und Sicherheitsstandards ständig weiterentwickeln, sollte von Zeit zu Zeit überprüft werden, ob die Firmware der eingesetzten Geräte noch den aktuellen Sicherheitsanforderungen entspricht und/oder neue Funktionen unterstützt[info2.pdf]. PCS empfiehlt, die Datenerfassungs- und Zutrittskontrollsysteme stets auf dem neuesten Stand der Technik zu halten, um eine optimale Funktionalität sicherzustellen.  "
 
     def __init__(
         self,
@@ -115,7 +113,7 @@ info2.pdf: Da sich Technologien weiterentwickeln sollte die Firmware auf Sicherh
                 # Azure Open AI takes the deployment name as the model name
                 model=self.chatgpt_deployment if self.chatgpt_deployment else self.chatgpt_model,
                 messages=message_builder.messages,
-                temperature=overrides.get("temperature") or 0.3,
+                temperature=overrides.get("temperature") or 0.8,
                 max_tokens=1024,
                 n=1,
             )

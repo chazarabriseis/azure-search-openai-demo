@@ -24,7 +24,7 @@ export function Component(): JSX.Element {
     const [promptTemplatePrefix, setPromptTemplatePrefix] = useState<string>("");
     const [promptTemplateSuffix, setPromptTemplateSuffix] = useState<string>("");
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
-    const [retrieveCount, setRetrieveCount] = useState<number>(5);
+    const [retrieveCount, setRetrieveCount] = useState<number>(4);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
     const [useSemanticCaptions, setUseSemanticCaptions] = useState<boolean>(false);
     const [useGPT4V, setUseGPT4V] = useState<boolean>(false);

@@ -260,9 +260,10 @@ const Chat = () => {
             </div>
             <div className={styles.chatRoot}>
                 <div className={styles.chatContainer}>
+                    <h2>Athena KI-Testphase: Feedback zur Qualität im Teamskanal erwünscht!</h2>
+                    <h3>Wenn du einen Produktnamen in deiner Frage verwenden willst, gib diesen in "" an. Zum Beispiel "INTUS ACM40e".</h3>
                     {!lastQuestionRef.current ? (
                         <div className={styles.chatEmptyState}>
-                            <h2>Athena KI-Testphase: Feedback zur Qualität im Teamskanal erwünscht!</h2>
                             <SparkleFilled fontSize={"120px"} primaryFill={"#9CBF2B"} aria-hidden="true" aria-label="Chat logo" />
                             <h1 className={styles.chatEmptyStateTitle}>Chatte mit der PCS Wissensdatenbank</h1>
                             <h2 className={styles.chatEmptyStateSubtitle}>Stelle eine Frage zu den PCS Geräten oder probiere eins der Beispiele</h2>
@@ -388,7 +389,7 @@ const Chat = () => {
                     {useLogin && <TokenClaimsDisplay />}
                 </Panel>
             </div>
-            {!lastQuestionRef.current ? (
+            {lastQuestionRef.current ? (
                 <div className={styles.emailBottomSection}>
                     <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
                 </div>
