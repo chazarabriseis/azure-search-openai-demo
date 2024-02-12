@@ -15,6 +15,7 @@ interface Props {
     question: string;
     answer: ChatAppResponse;
     tabName: string;
+    prompt: string;
 }
 
 const client = useLogin ? useMsal().instance : undefined;
@@ -65,7 +66,7 @@ const dropdownBenefitsOptions = [
     { key: "Sonstiges, siehe unten:", text: "Sonstiges, siehe unten:" }
 ];
 
-export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) => {
+export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }: Props) => {
     const [showInfo, setShowInfo] = useState(false);
 
     const { instance } = useMsal();
@@ -151,6 +152,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName }: Props) 
             Frage: answer.choices[0].context.thoughts[0].description,
             // Prompt: answer.choices[0].context.thoughts[2].description[0],
             AntwortChatGPT: answer.choices[0].message.content,
+            NewPrompt: prompt,
             Kontext: context,
             Korrektheit: selectedCorrectness?.text,
             korrekte_Antwort: correct_answer,

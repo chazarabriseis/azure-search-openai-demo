@@ -212,7 +212,9 @@ export function Component(): JSX.Element {
 
             <div className={styles.emailBottomSection}>
                 <div className={styles.emailQuestionInput}>
-                    {!isLoading && answer && !error && <EvaluationInput disabled={isLoading} question={question} answer={answer} tabName={"qa"} />}
+                    {!isLoading && answer && !error && (
+                        <EvaluationInput disabled={isLoading} question={question} answer={answer} tabName={"qa"} prompt={promptTemplate} />
+                    )}
                 </div>
             </div>
 

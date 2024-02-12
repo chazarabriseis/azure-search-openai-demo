@@ -33,7 +33,7 @@ import { EvaluationInputChat } from "../../components/EvaluationInputChat";
 const Chat = () => {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [promptTemplate, setPromptTemplate] = useState<string>("");
-    const [retrieveCount, setRetrieveCount] = useState<number>(5);
+    const [retrieveCount, setRetrieveCount] = useState<number>(3);
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
     const [shouldStream, setShouldStream] = useState<boolean>(true);
@@ -338,10 +338,6 @@ const Chat = () => {
                     </div>
                 </div>
 
-                <div className={styles.emailBottomSection}>
-                    <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
-                </div>
-
                 {answers.length > 0 && activeAnalysisPanelTab && (
                     <AnalysisPanel
                         className={styles.chatAnalysisPanel}
@@ -391,6 +387,9 @@ const Chat = () => {
                     )}
                     {useLogin && <TokenClaimsDisplay />}
                 </Panel>
+            </div>
+            <div className={styles.emailBottomSection}>
+                <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
             </div>
         </div>
     );
