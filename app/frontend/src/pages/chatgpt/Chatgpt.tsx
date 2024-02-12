@@ -338,11 +338,15 @@ export function Component(): JSX.Element {
                     </div>
                 </div>
 
-                <div className={styles.emailBottomSection}>
-                    <div className={styles.emailQuestionInput}>
-                        {!isLoading && !error && <EvaluationInputChatGPT disabled={isLoading} tabName={"chatGPT"} />}
+                {!lastQuestionRef.current ? (
+                    <div className={styles.emailBottomSection}>
+                        <div className={styles.emailQuestionInput}>
+                            {!isLoading && !error && <EvaluationInputChatGPT disabled={isLoading} tabName={"chatGPT"} />}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div></div>
+                )}
 
                 {answers.length > 0 && activeAnalysisPanelTab && (
                     <AnalysisPanel

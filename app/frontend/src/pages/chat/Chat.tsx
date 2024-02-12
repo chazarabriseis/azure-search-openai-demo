@@ -388,9 +388,13 @@ const Chat = () => {
                     {useLogin && <TokenClaimsDisplay />}
                 </Panel>
             </div>
-            <div className={styles.emailBottomSection}>
-                <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
-            </div>
+            {!lastQuestionRef.current ? (
+                <div className={styles.emailBottomSection}>
+                    <div className={styles.emailQuestionInput}>{!isLoading && !error && <EvaluationInputChat disabled={isLoading} tabName={"chat"} />}</div>
+                </div>
+            ) : (
+                <div></div>
+            )}
         </div>
     );
 };

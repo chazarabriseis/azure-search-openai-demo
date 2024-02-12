@@ -59,31 +59,34 @@ export function Component(): JSX.Element {
         "Der Assistent hilft den Mitarbeitern der PCS bei Support Fragen von Kunden. " +
         "Beantworten Sie die Fragen NUR mit den Fakten, die in der Liste der Quellen unten aufgeführt sind. Wenn die Informationen unten nicht ausreichen, sagen Sie, dass Sie es nicht wissen. Geben Sie keine Antworten, die sich nicht auf die unten aufgeführten Quellen stützen. Wenn eine klärende Frage an den Benutzer hilfreich wäre, stellen Sie die Frage. " +
         "Für tabellarische Informationen geben Sie diese als html-Tabelle zurück. Geben Sie kein Markdown-Format zurück. Antworten Sie auf deutsch. " +
-        "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information; geben Sie immer den Namen der Quelle für jede Tatsache an, die Sie in Ihrer Antwort verwenden. Verwenden Sie eckige Klammern, um auf die Quelle zu verweisen, zum Beispiel [info1.txt]. Kombinieren Sie keine Quellen, sondern geben Sie jede Quelle einzeln an, z. B. [info1.txt][info2.pdf]. ";
+        "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information; geben Sie immer den Namen der Quelle für jede Tatsache an, die Sie in Ihrer Antwort verwenden. Verwenden Sie eckige Klammern, um auf die Quelle zu verweisen, zum Beispiel [info1.txt]. Kombinieren Sie keine Quellen, sondern geben Sie jede Quelle einzeln an, z. B. [info1.txt][info2.pdf]. " +
+        'aWenn ein Produkt im Format "Produktname" eingegben wird, beziehe dich nur auf dieses spezifische Produkt und deren vorhandenen Datenquellen. Beispiel: "INTUS ACM40e" ';
 
     const qaPrompt =
-        "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen. " +
+        "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen." +
         "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. " +
-        "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: " +
-        "Was ist der KP1 Satz? " +
-        "Quellen: " +
-        "info1.txt: Mit dem KP1 Satz können Terminals und Leser parametriert werden. " +
-        "info2.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden. " +
-        "info3.pdf: Es können Berechtigungen vergeben werden. " +
-        "info4.pdf: Es können die Anzahl der Türen angepasst werder. " +
-        "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf].";
+        "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel" +
+        'Wenn ein Produkt im Format "Produktname" eingegben wird, beziehe dich nur auf dieses spezifische Produkt und deren vorhandenen Datenquellen. Beispiel: "INTUS ACM40e" ' +
+        "Beende jede Antwort mit einem neuen Ansatz, wo du darauf  hinweist, dass die Antworten falsch sein könnten" +
+        "Was ist der KP1 Satz?" +
+        "Quellen:" +
+        "TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz können Terminals und Leser parametriert werden." +
+        "TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden." +
+        "Antwort: Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [TPI_Handbuch_4.0.2_D3000-420_25.pdf], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [TPI_Handbuch_4.0.2_D3000-420_25.pdf]" +
+        "Hinweis: ATHENA befindet sich derzeit noch in der Betaphase, weshalb die Antworten möglicherweise nicht immer korrekt sein können. Bitte bewerte die erhaltenen Antworten entsprechend. Vielen Dank für dein Verständnis!";
 
     const qaDetailPrompt =
-        "Beantworte die Frage detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen. " +
+        "Beantworte die Frage detailliert auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen." +
         "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. " +
-        "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel: " +
-        "Was ist der KP1 Satz? " +
-        "Quellen: " +
-        "info1.txt: Mit dem KP1 Satz können Terminals und Leser parametriert werden. " +
-        "info2.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden. " +
-        "info3.pdf: Es können Berechtigungen vergeben werden. " +
-        "info4.pdf: Es können die Anzahl der Türen angepasst werder. " +
-        "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [info1.txt], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [info2.pdf] und der Anzahl der Türen [info4.pdf].";
+        "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel" +
+        'Wenn ein Produkt im Format "Produktname" eingegben wird, beziehe dich nur auf dieses spezifische Produkt und deren vorhandenen Datenquellen. Beispiel: "INTUS ACM40e" ' +
+        "Beende jede Antwort mit einem neuen Ansatz, wo du darauf  hinweist, dass die Antworten falsch sein könnten" +
+        "Was ist der KP1 Satz?" +
+        "Quellen:" +
+        "TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz können Terminals und Leser parametriert werden." +
+        "TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden." +
+        "Antwort: Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [TPI_Handbuch_4.0.2_D3000-420_25.pdf], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [TPI_Handbuch_4.0.2_D3000-420_25.pdf]" +
+        "Hinweis: ATHENA befindet sich derzeit noch in der Betaphase, weshalb die Antworten möglicherweise nicht immer korrekt sein können. Bitte bewerte die erhaltenen Antworten entsprechend. Vielen Dank für dein Verständnis!";
 
     const marketingPrompt =
         "Verwende für die Fragestellung NUR die Fakten, die in der Liste der Quellen unten aufgeführt sind. " +

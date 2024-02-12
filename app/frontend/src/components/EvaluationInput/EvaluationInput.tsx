@@ -77,7 +77,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onUserChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setUser("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setUser(newValue);
         }
     };
@@ -87,7 +87,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onCorrectAnswerChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setCorrectAnswer("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setCorrectAnswer(newValue);
         }
     };
@@ -97,7 +97,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onHandbuchChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setHandbuch("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setHandbuch(newValue);
         }
     };
@@ -107,7 +107,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onAnmerkungChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setAnmerkung("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setAnmerkung(newValue);
         }
     };
@@ -117,7 +117,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onSonstigesChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setSonstiges("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setSonstiges(newValue);
         }
     };
@@ -127,7 +127,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
     const onSupportTicketIDChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
         if (!newValue) {
             setSupportTicketID("");
-        } else if (newValue.length <= 1000) {
+        } else if (newValue.length <= 5000) {
             setSupportTicketID(newValue);
         }
     };
@@ -158,7 +158,6 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
             korrekte_Antwort: correct_answer,
             Quelle: handbuch,
             Anmerkung: anmerkung,
-            TicketID: supportTicketID,
             Benefit: benefitsListe,
             Sonstiges: sonstiges,
             Thema: themenListe,
@@ -286,6 +285,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
                                     placeholder={"Bitte gib die richtige Antwort an: "}
                                     value={correct_answer}
                                     onChange={onCorrectAnswerChange}
+                                    maxLength={4000}
                                 />
                             </Stack>
                             <Stack horizontal className={styles.evaluationInputTextContainer}>
@@ -304,6 +304,7 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
                                     placeholder={"Anmerkung: "}
                                     value={anmerkung}
                                     onChange={onAnmerkungChange}
+                                    maxLength={4000}
                                 />
                             </Stack>
                         </div>

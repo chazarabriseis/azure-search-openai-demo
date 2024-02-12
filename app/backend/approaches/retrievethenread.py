@@ -23,9 +23,11 @@ class RetrieveThenReadApproach(Approach):
     """
    
     system_chat_template = (
-        "Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen."
-        + "Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. "
-        + "Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel"
+        'Beantworte die Frage prägnant auf deutsch, verwende nur die Daten aus den unten aufgeführten Quellen.'
+        + 'Jede Quelle hat einen Namen, gefolgt von einem Doppelpunkt und der eigentlichen Information. Gib immer den Namen der Quelle für jede Tatsache an, die in deiner Antwort verwendet wird. '
+        + 'Wenn die Frage nicht anhand der unten aufgeführten Quellen beantwortet werden kann, sag dass du es nicht weißt. Verwende zur Beantwortung das folgende Beispiel'
+        + 'Wenn ein Produkt im Format "Produktname" eingegben wird, beziehe dich nur auf dieses spezifische Produkt und deren vorhandenen Datenquellen. Beispiel: "INTUS ACM40e" '
+        + 'Beende jede Antwort mit einem neuen Ansatz, wo du darauf  hinweist, dass die Antworten falsch sein könnten'
     )
 
     # shots/sample conversation
@@ -36,7 +38,7 @@ class RetrieveThenReadApproach(Approach):
         TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz können Terminals und Leser parametriert werden. 
         TPI_Handbuch_4.0.2_D3000-420_25.pdf: Mit dem KP1 Satz kann das Türöffnungsprofil gesetzt werden.
         """
-    answer = "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [TPI_Handbuch_4.0.2_D3000-420_25.pdf], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [TPI_Handbuch_4.0.2_D3000-420_25.pdf]"
+    answer = "Der KP1 Satz ist ein Satz zur Parametrierung der Funktionalität des Terminals und jedes Lesers [TPI_Handbuch_4.0.2_D3000-420_25.pdf], wie zum Beipsiel das Erstellen einesTüroffnungsprofil [TPI_Handbuch_4.0.2_D3000-420_25.pdf] Hinweis: ATHENA befindet sich derzeit noch in der Betaphase, weshalb die Antworten möglicherweise nicht immer korrekt sein können. Bitte bewerte die erhaltenen Antworten entsprechend. Vielen Dank für dein Verständnis!"
     def __init__(
         self,
         *,
