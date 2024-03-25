@@ -192,10 +192,6 @@ export function Component(): JSX.Element {
                             onThoughtProcessClicked={() => onToggleTab(AnalysisPanelTabs.ThoughtProcessTab)}
                             //onSupportingContentClicked={() => onToggleTab(AnalysisPanelTabs.SupportingContentTab)}
                         />
-                        <div>
-                            Hinweis: ATHENA befindet sich derzeit noch in der Betaphase, weshalb die Antworten möglicherweise nicht immer korrekt sein können.
-                            Bitte bewerte die erhaltenen Antworten entsprechend. Vielen Dank für dein Verständnis!
-                        </div>
                     </div>
                 )}
                 {error ? (

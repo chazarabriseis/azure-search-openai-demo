@@ -55,6 +55,10 @@ export const Answer = ({
 
             <Stack.Item grow>
                 <div className={styles.answerText} dangerouslySetInnerHTML={{ __html: sanitizedAnswerHtml }}></div>
+                <div>
+                    Hinweis: ATHENA befindet sich derzeit noch in der Betaphase, weshalb die Antworten möglicherweise nicht immer korrekt sein können. Bitte
+                    bewerte die erhaltenen Antworten entsprechend. Vielen Dank für dein Verständnis!
+                </div>
             </Stack.Item>
 
             {!!parsedAnswer.citations.length && (
