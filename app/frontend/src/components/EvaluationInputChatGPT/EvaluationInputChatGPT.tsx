@@ -59,6 +59,16 @@ export const EvaluationInputChatGPT = ({ disabled, tabName }: Props) => {
         }
     };
 
+    const [benefitMinuten, setBenefitMinuten] = useState<string>("");
+
+    const onBenefitMinutenChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+        if (!newValue) {
+            setBenefitMinuten("");
+        } else if (newValue.length <= 5000) {
+            setBenefitMinuten(newValue);
+        }
+    };
+
     const [sonstiges, setSonstiges] = useState<string>("");
 
     const onSonstigesChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -118,9 +128,11 @@ export const EvaluationInputChatGPT = ({ disabled, tabName }: Props) => {
             Korrektheit: selectedCorrectness?.text,
             korrekte_Antwort: correct_answer,
             Benefit: benefitsListe,
+            BenefitMinuten: benefitMinuten,
             Sonstiges: sonstiges,
             Benutzer: user,
-            Zeitstempel: currentDatetime
+            Zeitstempel: currentDatetime,
+            model: "gpt-4"
         };
         const dataToAppend = JSON.stringify(newline) + "\n";
 
@@ -196,6 +208,15 @@ export const EvaluationInputChatGPT = ({ disabled, tabName }: Props) => {
                             options={dropdownBenefitsOptions}
                             styles={dropdownStyles}
                             multiSelect
+                        />
+                    </Stack>
+                    <Stack horizontal className={styles.evaluationInputTextContainer}>
+                        <TextField
+                            className={styles.evaluationInputTextContainer}
+                            resizable={false}
+                            placeholder={"Wieviel Zeitersparnis (in Minuten) hat dir Athena gebracht?"}
+                            value={benefitMinuten}
+                            onChange={onBenefitMinutenChange}
                         />
                     </Stack>
                     <Stack horizontal className={styles.evaluationInputTextContainer}>

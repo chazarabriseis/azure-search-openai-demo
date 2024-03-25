@@ -64,7 +64,8 @@ export const QuestionInput = ({ onSend, disabled, placeholder, clearOnSend, init
                 disabled={disableRequiredAccessControl}
                 placeholder={placeholder}
                 multiline={true}
-                resizable={false}
+                resizable={true}
+                autoAdjustHeight
                 borderless
                 value={question}
                 onChange={onQuestionChange}

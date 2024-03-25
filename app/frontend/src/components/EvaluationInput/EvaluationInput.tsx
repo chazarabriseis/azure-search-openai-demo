@@ -132,6 +132,16 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
         }
     };
 
+    const [benefitMinuten, setBenefitMinuten] = useState<string>("");
+
+    const onBenefitMinutenChange = (_ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+        if (!newValue) {
+            setBenefitMinuten("");
+        } else if (newValue.length <= 5000) {
+            setBenefitMinuten(newValue);
+        }
+    };
+
     const makeApiRequest = async () => {
         const token = client ? await getToken(client) : undefined;
         const contextList = answer.choices[0].context.thoughts[1].description;
@@ -159,10 +169,12 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
             Quelle: handbuch,
             Anmerkung: anmerkung,
             Benefit: benefitsListe,
+            BenefitMinuten: benefitMinuten,
             Sonstiges: sonstiges,
             Thema: themenListe,
             Benutzer: user,
-            Zeitstempel: currentDatetime
+            Zeitstempel: currentDatetime,
+            model: "gpt-4"
         };
         const dataToAppend = JSON.stringify(newline) + "\n";
 
@@ -338,6 +350,15 @@ export const EvaluationInput = ({ disabled, question, answer, tabName, prompt }:
                             options={dropdownBenefitsOptions}
                             styles={dropdownStyles}
                             multiSelect
+                        />
+                    </Stack>
+                    <Stack horizontal className={styles.evaluationInputTextContainer}>
+                        <TextField
+                            className={styles.evaluationInputTextContainer}
+                            resizable={false}
+                            placeholder={"Wieviel Zeitersparnis (in Minuten) hat dir Athena gebracht?"}
+                            value={benefitMinuten}
+                            onChange={onBenefitMinutenChange}
                         />
                     </Stack>
                     <Stack horizontal className={styles.evaluationInputTextContainer}>
